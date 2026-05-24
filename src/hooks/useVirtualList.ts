@@ -14,8 +14,7 @@ interface VisibleItem<T> {
 interface UseVirtualListReturn<T> {
   readonly containerRef: React.RefObject<HTMLDivElement | null>;
   readonly visibleItems: Array<VisibleItem<T>>;
-  readonly paddingTop: number;
-  readonly paddingBottom: number;
+  readonly totalHeight: number;
 }
 
 /**
@@ -66,8 +65,7 @@ export function useVirtualList<T>({
     if (items.length === 0) {
       return {
         visibleItems: [],
-        paddingTop: 0,
-        paddingBottom: 0,
+        totalHeight: 0,
       };
     }
 
@@ -82,13 +80,11 @@ export function useVirtualList<T>({
       originalIndex: startIndex + index,
     }));
 
-    const paddingTop = startIndex * rowHeight;
-    const paddingBottom = Math.max(0, (items.length - endIndex) * rowHeight);
+    const totalHeight = items.length * rowHeight;
 
     return {
       visibleItems,
-      paddingTop,
-      paddingBottom,
+      totalHeight,
     };
   }, [items, rowHeight, scrollTop, clientHeight, buffer]);
 

@@ -28,8 +28,7 @@ describe('useVirtualList hook', () => {
     // startIndex = max(0, floor(0/50) - 5) = 0
     // endIndex = min(100, ceil(400/50) + 5) = 13
     expect(result.current.visibleItems.length).toBe(13);
-    expect(result.current.paddingTop).toBe(0);
-    expect(result.current.paddingBottom).toBe(4350); // (100 - 13) * 50 = 4350
+    expect(result.current.totalHeight).toBe(5000);
   });
 
   it('should calculate scroll bounds when element reference is measured', () => {
@@ -76,7 +75,6 @@ describe('useVirtualList hook', () => {
     // startIndex = max(0, floor(200/50) - 2) = 2
     // endIndex = min(100, ceil(700/50) + 2) = 16
     expect(result.visibleItems.length).toBe(14); // indices 2 to 15 (length 14)
-    expect(result.paddingTop).toBe(100); // 2 * 50 = 100
-    expect(result.paddingBottom).toBe(4200); // (100 - 16) * 50 = 4200
+    expect(result.totalHeight).toBe(5000);
   });
 });

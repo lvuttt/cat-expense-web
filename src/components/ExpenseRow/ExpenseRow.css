@@ -9,11 +9,11 @@
   align-items: center;
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
+  height: 100%;
+  box-sizing: border-box;
   transition:
     background-color var(--transition-fast),
     box-shadow var(--transition-fast);
-  animation: slideUp var(--transition-base) ease;
-  animation-fill-mode: both;
 }
 
 .expense-row:hover {

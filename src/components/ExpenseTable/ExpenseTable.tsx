@@ -77,7 +77,7 @@ export function ExpenseTable({
   const checkboxRef = useRef<HTMLInputElement>(null);
   const rowHeight = useRowHeight();
 
-  const { containerRef, visibleItems, paddingTop, paddingBottom } = useVirtualList({
+  const { containerRef, visibleItems, totalHeight } = useVirtualList({
     items: expenses,
     rowHeight,
   });
@@ -179,13 +179,22 @@ export function ExpenseTable({
         <div
           className="expense-table__inner"
           style={{
-            paddingTop: `${paddingTop}px`,
-            paddingBottom: `${paddingBottom}px`,
+            position: 'relative',
+            height: hasExpenses ? `${totalHeight}px` : 'auto',
           }}
         >
           {hasExpenses ? (
             visibleItems.map(({ item: expense, originalIndex }) => (
-              <div key={expense.id} style={{ animationDelay: `${originalIndex * 30}ms` }}>
+              <div
+                key={expense.id}
+                style={{
+                  position: 'absolute',
+                  top: `${originalIndex * rowHeight}px`,
+                  left: 0,
+                  right: 0,
+                  height: `${rowHeight}px`,
+                }}
+              >
                 <ExpenseRow
                   expense={expense}
                   isHighlighted={isInTopCategory(expense, topCategories)}

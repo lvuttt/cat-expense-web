@@ -126,4 +126,63 @@ describe('ExpenseRow component', () => {
 
     expect(onDuplicate).toHaveBeenCalledWith('exp-1');
   });
+
+  it('should trigger onEdit when the row container itself is clicked', () => {
+    const onEdit = vi.fn();
+    const { container } = render(
+      <ExpenseRow
+        expense={mockExpense}
+        isHighlighted={false}
+        isSelected={false}
+        onToggleSelect={() => {}}
+        onEdit={onEdit}
+        onDuplicate={() => {}}
+      />
+    );
+
+    const row = container.querySelector('.expense-row') as HTMLDivElement;
+    row.click();
+
+    expect(onEdit).toHaveBeenCalledWith(mockExpense);
+  });
+
+  it('should not trigger onEdit when clicking inside the checkbox cell due to stopPropagation', () => {
+    const onEdit = vi.fn();
+    const onToggleSelect = vi.fn();
+    const { container } = render(
+      <ExpenseRow
+        expense={mockExpense}
+        isHighlighted={false}
+        isSelected={false}
+        onToggleSelect={onToggleSelect}
+        onEdit={onEdit}
+        onDuplicate={() => {}}
+      />
+    );
+
+    const checkboxCell = container.querySelector('.expense-row__cell--checkbox') as HTMLDivElement;
+    checkboxCell.click();
+
+    expect(onEdit).not.toHaveBeenCalled();
+  });
+
+  it('should not trigger onEdit via row click when clicking actions cell (like duplicate)', () => {
+    const onEdit = vi.fn();
+    const onDuplicate = vi.fn();
+    const { container } = render(
+      <ExpenseRow
+        expense={mockExpense}
+        isHighlighted={false}
+        isSelected={false}
+        onToggleSelect={() => {}}
+        onEdit={onEdit}
+        onDuplicate={onDuplicate}
+      />
+    );
+
+    const actionsCell = container.querySelector('.expense-row__cell--actions') as HTMLDivElement;
+    actionsCell.click();
+
+    expect(onEdit).not.toHaveBeenCalled();
+  });
 });

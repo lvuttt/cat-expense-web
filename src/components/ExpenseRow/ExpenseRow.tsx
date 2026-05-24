@@ -54,14 +54,23 @@ export const ExpenseRow = memo(function ExpenseRow({
 
   const badgeClass = `expense-row__category-badge expense-row__category-badge--${categoryMeta.cssClass}`;
 
+  const handleRowClick = () => {
+    onEdit(expense);
+  };
+
   return (
     <div
       className={rowClasses}
       role="row"
       aria-selected={isSelected}
       data-expense-id={expense.id}
+      onClick={handleRowClick}
     >
-      <div className="expense-row__cell expense-row__cell--checkbox" role="gridcell">
+      <div 
+        className="expense-row__cell expense-row__cell--checkbox" 
+        role="gridcell"
+        onClick={(e) => e.stopPropagation()}
+      >
         <input
           className="expense-row__checkbox"
           type="checkbox"
@@ -93,7 +102,11 @@ export const ExpenseRow = memo(function ExpenseRow({
         {formatCurrency(expense.amount)}
       </div>
 
-      <div className="expense-row__cell expense-row__cell--actions" role="gridcell">
+      <div 
+        className="expense-row__cell expense-row__cell--actions" 
+        role="gridcell"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           className="expense-row__action-button expense-row__action-button--edit"
           onClick={() => onEdit(expense)}

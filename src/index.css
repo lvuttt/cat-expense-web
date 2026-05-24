@@ -361,6 +361,7 @@ body::before {
     /* 20px */
     --font-size-4xl: 1.5rem;
     /* 24px */
+    --checkbox-size: 15px;
   }
 }
 

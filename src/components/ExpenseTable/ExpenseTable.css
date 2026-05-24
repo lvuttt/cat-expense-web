@@ -82,8 +82,8 @@
 .expense-table__checkbox {
   appearance: none;
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-xs);
   background: var(--color-bg-secondary);
@@ -103,13 +103,13 @@
 .expense-table__checkbox:checked::after {
   content: '';
   position: absolute;
-  width: 4px;
-  height: 8px;
+  width: calc(var(--checkbox-size) * 0.2);
+  height: calc(var(--checkbox-size) * 0.4);
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-  top: 2px;
-  left: 6px;
+  top: calc(var(--checkbox-size) * 0.1);
+  left: calc(var(--checkbox-size) * 0.3);
 }
 
 .expense-table__checkbox:indeterminate {
@@ -120,11 +120,11 @@
 .expense-table__checkbox:indeterminate::after {
   content: '';
   position: absolute;
-  width: 8px;
+  width: calc((var(--checkbox-size) - 4px) * 0.5);
   height: 2px;
   background: white;
-  top: 7px;
-  left: 4px;
+  top: calc((var(--checkbox-size) - 6px) / 2);
+  left: calc((var(--checkbox-size) - 4px) * 0.25);
 }
 
 /* Body */
@@ -203,7 +203,7 @@
   }
 }
 
-/* Small mobile (< 500px): show table with 3 columns (name, category, amount) */
+/* Small mobile (< 500px): show table with 4 columns (checkbox, name, category, amount) */
 @media (max-width: 499px) {
   .expense-table {
     border-radius: var(--radius-lg);
@@ -211,12 +211,11 @@
 
   .expense-table__header {
     display: grid;
-    grid-template-columns: 1.2fr 1.1fr 80px;
+    grid-template-columns: 36px 1fr 1fr 75px;
     column-gap: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
   }
 
-  .expense-table__header-cell--checkbox,
   .expense-table__header-cell--actions {
     display: none;
   }

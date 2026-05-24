@@ -11,6 +11,7 @@
   border-radius: var(--radius-md);
   height: 100%;
   box-sizing: border-box;
+  cursor: pointer;
   transition:
     background-color var(--transition-fast),
     box-shadow var(--transition-fast);
@@ -85,8 +86,8 @@
 .expense-row__checkbox {
   appearance: none;
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-xs);
   background: var(--color-bg-secondary);
@@ -106,13 +107,13 @@
 .expense-row__checkbox:checked::after {
   content: '';
   position: absolute;
-  width: 4px;
-  height: 8px;
+  width: calc(var(--checkbox-size) * 0.2);
+  height: calc(var(--checkbox-size) * 0.4);
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-  top: 2px;
-  left: 6px;
+  top: calc(var(--checkbox-size) * 0.1);
+  left: calc(var(--checkbox-size) * 0.3);
 }
 
 /* Category badge */
@@ -261,12 +262,11 @@
 /* Small mobile (< 500px): compact single-row grid, matches header columns */
 @media (max-width: 499px) {
   .expense-row {
-    grid-template-columns: 1.2fr 1.1fr 80px;
+    grid-template-columns: 36px 1fr 1fr 75px;
     column-gap: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
   }
 
-  .expense-row__cell--checkbox,
   .expense-row__cell--actions {
     display: none;
   }

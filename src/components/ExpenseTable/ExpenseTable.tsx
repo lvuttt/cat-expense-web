@@ -55,10 +55,10 @@ const SORTABLE_COLUMNS: Array<{
   label: string;
   className: string;
 }> = [
-  { field: 'name', label: 'Item Name', className: '' },
-  { field: 'category', label: 'Category', className: '' },
-  { field: 'amount', label: 'Amount', className: 'expense-table__header-cell--amount' },
-];
+    { field: 'name', label: 'Item Name', className: '' },
+    { field: 'category', label: 'Category', className: '' },
+    { field: 'amount', label: 'Amount', className: 'expense-table__header-cell--amount' },
+  ];
 
 export function ExpenseTable({
   expenses,
@@ -148,11 +148,10 @@ export function ExpenseTable({
               {label}
               {isSorted && (
                 <span
-                  className={`expense-table__sort-icon ${
-                    sortConfig.direction === 'desc'
+                  className={`expense-table__sort-icon ${sortConfig.direction === 'desc'
                       ? 'expense-table__sort-icon--desc'
                       : ''
-                  }`}
+                    }`}
                   aria-hidden="true"
                 >
                   ▲

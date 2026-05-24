@@ -34,7 +34,7 @@ function useRowHeight(): number {
     const updateHeight = () => {
       const width = window.innerWidth;
       if (width < 500) {
-        setHeight(84); // Mobile card layout height
+        setHeight(48); // Mobile table row height
       } else if (width < 768) {
         setHeight(40); // Tablet compressed row height
       } else {

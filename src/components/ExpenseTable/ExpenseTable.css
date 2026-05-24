@@ -86,7 +86,7 @@
   height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-xs);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--color-bg-secondary);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -203,26 +203,29 @@
   }
 }
 
-/* Small mobile (< 500px): hide header, make table wrapper transparent so card modules float individually */
+/* Small mobile (< 500px): show table with 3 columns (name, category, amount) */
 @media (max-width: 499px) {
   .expense-table {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
+    border-radius: var(--radius-lg);
   }
 
   .expense-table__header {
+    display: grid;
+    grid-template-columns: 1.2fr 1.1fr 80px;
+    column-gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .expense-table__header-cell--checkbox,
+  .expense-table__header-cell--actions {
     display: none;
   }
 
   .expense-table__body {
-    padding: 0;
+    padding: var(--space-xs) 0;
   }
 
   .expense-table__inner > *:not(:last-child) {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
 }

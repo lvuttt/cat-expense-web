@@ -39,3 +39,9 @@
     padding: 0 var(--space-md);
   }
 }
+
+@media (max-width: 500px) {
+  .app__container {
+    padding: 0 var(--space-xs);
+  }
+}

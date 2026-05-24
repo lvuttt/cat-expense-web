@@ -23,7 +23,6 @@
 /* Highlighted — belongs to top spending category */
 .expense-row--highlighted {
   background: var(--color-highlight-bg);
-  box-shadow: inset 3px 0 0 var(--color-accent-start);
 }
 
 .expense-row--highlighted:hover {
@@ -90,7 +89,7 @@
   height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-xs);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--color-bg-secondary);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -257,82 +256,18 @@
     padding: var(--space-2xs) var(--space-xs);
     font-size: 0.7rem;
   }
-
-  /* Hide tooltip bubbles — not enough room */
-  [data-tooltip]::before,
-  [data-tooltip]::after {
-    display: none;
-  }
 }
 
-/* Small mobile (< 500px): reflow to individual floating glassmorphic cards */
+/* Small mobile (< 500px): compact single-row grid, matches header columns */
 @media (max-width: 499px) {
   .expense-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto auto;
-    row-gap: var(--space-sm);
-    column-gap: var(--space-sm);
-    padding: var(--space-md);
-    margin-bottom: var(--space-sm);
-    background: var(--color-bg-glass);
-    border: 1px solid var(--color-bg-glass-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    grid-template-columns: 1.2fr 1.1fr 80px;
+    column-gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
   }
 
-  .expense-row__cell--category {
-    grid-column: 1;
-    grid-row: 1;
-    justify-content: flex-start;
-  }
-
-  .expense-row__cell--amount {
-    grid-column: 2;
-    grid-row: 1;
-    justify-content: flex-end;
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-bold);
-  }
-
-  .expense-row__cell--name {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-  }
-
-  .expense-row__cell--checkbox {
-    grid-column: 1;
-    grid-row: 3;
-    justify-content: flex-start;
-  }
-
+  .expense-row__cell--checkbox,
   .expense-row__cell--actions {
-    grid-column: 2;
-    grid-row: 3;
-    justify-content: flex-end;
-    gap: var(--space-md); /* Expanded touch spacing */
-  }
-
-  /* Make buttons larger and easier to tap on mobile */
-  .expense-row__action-button {
-    width: 38px;
-    height: 38px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--color-bg-glass-border);
-    border-radius: var(--radius-md);
-  }
-
-  .expense-row__action-icon {
-    width: 38px;
-    height: 38px;
-  }
-
-  /* Hide tooltips on touch */
-  [data-tooltip]::before,
-  [data-tooltip]::after {
     display: none;
   }
 }

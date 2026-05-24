@@ -6,7 +6,7 @@
  * Memoized to prevent unnecessary re-renders when other rows change.
  */
 
-import { memo } from 'react';
+import { memo, useState, useRef } from 'react';
 import type { Expense } from '../../types';
 import { CATEGORY_CONFIG } from '../../constants';
 import { formatCurrency } from '../../utils/formatUtils';
@@ -30,6 +30,19 @@ export const ExpenseRow = memo(function ExpenseRow({
   onDuplicate,
 }: ExpenseRowProps) {
   const categoryMeta = CATEGORY_CONFIG[expense.category];
+  const nameRef = useRef<HTMLSpanElement>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleMouseEnter = () => {
+    if (nameRef.current) {
+      const isOverflowing = nameRef.current.scrollWidth > nameRef.current.clientWidth;
+      setShowTooltip(isOverflowing);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
 
   const rowClasses = [
     'expense-row',
@@ -62,9 +75,11 @@ export const ExpenseRow = memo(function ExpenseRow({
       <div
         className="expense-row__cell expense-row__cell--name"
         role="gridcell"
-        data-tooltip={expense.name}
+        data-tooltip={showTooltip ? expense.name : undefined}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <span className="expense-row__name-text">{expense.name}</span>
+        <span ref={nameRef} className="expense-row__name-text">{expense.name}</span>
       </div>
 
       <div className="expense-row__cell expense-row__cell--category" role="gridcell">

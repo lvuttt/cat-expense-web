@@ -65,12 +65,29 @@ export function isInTopCategory(
 }
 
 /**
+ * Generates a unique identifier.
+ * Uses crypto.randomUUID() when available (secure contexts/localhost).
+ * Falls back to a pseudorandom algorithm on non-secure contexts (e.g. mobile over HTTP).
+ */
+export function generateId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  // Math.random-based RFC4122 v4 UUID generator fallback
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+/**
  * Creates a new Expense entity from form data.
  * Assigns a unique ID and creation timestamp.
  */
 export function createExpense(formData: ExpenseFormData): Expense {
   return {
-    id: crypto.randomUUID(),
+    id: generateId(),
     name: formData.name.trim(),
     category: formData.category,
     amount: Number(formData.amount.toFixed(2)),
@@ -79,29 +96,14 @@ export function createExpense(formData: ExpenseFormData): Expense {
 }
 
 /**
- * Derives the next copy name for a duplicated expense.
- * Handles suffix incrementing: Name → Name (Copy) → Name (Copy 2) → ...
- */
-export function getNextCopyName(name: string): string {
-  // Match "Name (Copy)" or "Name (Copy N)"
-  const copyMatch = name.match(/^(.*?)\s*\(Copy(?:\s+(\d+))?\)$/);
-  if (copyMatch) {
-    const base = copyMatch[1];
-    const n = copyMatch[2] ? parseInt(copyMatch[2], 10) : 1;
-    return `${base} (Copy ${n + 1})`;
-  }
-  return `${name} (Copy)`;
-}
-
-/**
  * Creates a duplicate of an existing expense.
- * Generates a new ID and appends a smart "(Copy N)" suffix to the name.
+ * Generates a new ID and keeps the name identical.
  */
 export function duplicateExpenseItem(expense: Expense): Expense {
   return {
     ...expense,
-    id: crypto.randomUUID(),
-    name: getNextCopyName(expense.name),
+    id: generateId(),
+    name: expense.name,
     createdAt: new Date().toISOString(),
   };
 }

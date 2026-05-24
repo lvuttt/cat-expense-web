@@ -80,19 +80,83 @@
 
 /* Checkbox in header */
 .expense-table__checkbox {
-  width: var(--checkbox-size);
-  height: var(--checkbox-size);
-  accent-color: var(--color-accent-start);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.expense-table__checkbox:checked {
+  background: var(--color-accent-start);
+  border-color: var(--color-accent-start);
+}
+
+.expense-table__checkbox:checked::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  top: 2px;
+  left: 6px;
+}
+
+.expense-table__checkbox:indeterminate {
+  background: var(--color-accent-start);
+  border-color: var(--color-accent-start);
+}
+
+.expense-table__checkbox:indeterminate::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  background: white;
+  top: 7px;
+  left: 4px;
 }
 
 /* Body */
 .expense-table__body {
   padding: var(--space-xs) 0;
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Webkit scrollbar styling */
+.expense-table__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.expense-table__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expense-table__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+}
+
+.expense-table__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Divider between rows */
-.expense-table__body > *:not(:last-child) {
+.expense-table__inner > *:not(:last-child) {
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
@@ -139,13 +203,26 @@
   }
 }
 
-/* Small mobile (< 500px): hide header, rows reflow to card layout */
+/* Small mobile (< 500px): hide header, make table wrapper transparent so card modules float individually */
 @media (max-width: 499px) {
   .expense-table {
-    border-radius: var(--radius-lg);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
   }
 
   .expense-table__header {
     display: none;
+  }
+
+  .expense-table__body {
+    padding: 0;
+  }
+
+  .expense-table__inner > *:not(:last-child) {
+    border-bottom: none;
   }
 }

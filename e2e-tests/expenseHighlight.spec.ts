@@ -144,9 +144,10 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await row.locator('.expense-row__action-button--duplicate').click();
 
     // Verify clone exists
-    const cloneRow = page.locator('.expense-row', { hasText: 'Play Feather (Copy)' });
-    await expect(cloneRow).toBeVisible();
-    await expect(cloneRow.locator('.expense-row__cell--amount')).toHaveText('$12.00');
+    const rows = page.locator('.expense-row', { hasText: 'Play Feather' });
+    await expect(rows).toHaveCount(2);
+    await expect(rows.nth(0).locator('.expense-row__cell--amount')).toHaveText('$12.00');
+    await expect(rows.nth(1).locator('.expense-row__cell--amount')).toHaveText('$12.00');
 
   });
 
@@ -264,19 +265,18 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(tunaRow).toHaveClass(/expense-row--highlighted/);
   });
 
-  test('should support multiple duplications with correct name suffixes', async ({ page }) => {
+  test('should support multiple duplications with identical names', async ({ page }) => {
     await addExpense(page, 'Toy', '✨ Accessory', '5.00');
-    const originalRow = page.locator('.expense-row', { hasText: 'Toy' });
+    const rows = page.locator('.expense-row', { hasText: 'Toy' });
+    await expect(rows).toHaveCount(1);
 
     // Duplicate once
-    await originalRow.locator('.expense-row__action-button--duplicate').click();
-    const copy1 = page.locator('.expense-row', { hasText: 'Toy (Copy)' }).first();
-    await expect(copy1).toBeVisible();
+    await rows.first().locator('.expense-row__action-button--duplicate').click();
+    await expect(rows).toHaveCount(2);
 
-    // Duplicate the copy
-    await copy1.locator('.expense-row__action-button--duplicate').click();
-    const copy2 = page.locator('.expense-row', { hasText: 'Toy (Copy 2)' });
-    await expect(copy2).toBeVisible();
+    // Duplicate again
+    await rows.first().locator('.expense-row__action-button--duplicate').click();
+    await expect(rows).toHaveCount(3);
   });
 
   test('should support checking and unchecking all items via header checkbox', async ({ page }) => {

@@ -21,7 +21,11 @@ export function SpendingChart({ expenses, topCategories }: SpendingChartProps) {
   if (expenses.length === 0) return null;
 
   const categoryTotals = sumByCategory(expenses);
-  const grandTotal = [...categoryTotals.values()].reduce((sum, v) => sum + v, 0);
+  const grandTotalCents = [...categoryTotals.values()].reduce(
+    (sum, v) => sum + Math.round(v * 100),
+    0,
+  );
+  const grandTotal = grandTotalCents / 100;
 
   const rows = CATEGORIES.map((cat) => ({
     category: cat,

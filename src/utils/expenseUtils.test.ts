@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { Expense, Category } from '../types';
 import {
   calculateTotal,
@@ -7,7 +7,7 @@ import {
   isInTopCategory,
   createExpense,
   duplicateExpenseItem,
-  getNextCopyName,
+  generateId,
 } from './expenseUtils';
 
 describe('expenseUtils', () => {
@@ -179,30 +179,8 @@ describe('expenseUtils', () => {
     });
   });
 
-  describe('getNextCopyName', () => {
-    it('should append (Copy) to a plain name', () => {
-      expect(getNextCopyName('Feather Toy')).toBe('Feather Toy (Copy)');
-    });
-
-    it('should increment (Copy) to (Copy 2)', () => {
-      expect(getNextCopyName('Feather Toy (Copy)')).toBe('Feather Toy (Copy 2)');
-    });
-
-    it('should increment (Copy 2) to (Copy 3)', () => {
-      expect(getNextCopyName('Feather Toy (Copy 2)')).toBe('Feather Toy (Copy 3)');
-    });
-
-    it('should handle high copy numbers correctly', () => {
-      expect(getNextCopyName('Item (Copy 99)')).toBe('Item (Copy 100)');
-    });
-
-    it('should not double-append if name already ends with spaces before (Copy)', () => {
-      expect(getNextCopyName('Item  (Copy)')).toBe('Item (Copy 2)');
-    });
-  });
-
   describe('duplicateExpenseItem', () => {
-    it('should create a copy of the expense with a new ID, current timestamp, and (Copy) appended to its name', () => {
+    it('should create a copy of the expense with a new ID, current timestamp, and the identical name', () => {
       const original: Expense = {
         id: 'old-id',
         name: 'Feather Toy',
@@ -212,22 +190,45 @@ describe('expenseUtils', () => {
       };
       const copy = duplicateExpenseItem(original);
       expect(copy.id).not.toBe(original.id);
-      expect(copy.name).toBe('Feather Toy (Copy)');
+      expect(copy.name).toBe('Feather Toy');
       expect(copy.category).toBe(original.category);
       expect(copy.amount).toBe(original.amount);
       expect(copy.createdAt).not.toBe(original.createdAt);
     });
+  });
 
-    it('should produce (Copy 2) when duplicating an item already named with (Copy)', () => {
-      const original: Expense = {
-        id: 'copy-id',
-        name: 'Feather Toy (Copy)',
-        category: 'Accessory',
-        amount: 8.5,
-        createdAt: '2026-05-23T12:00:00Z',
-      };
-      const copy = duplicateExpenseItem(original);
-      expect(copy.name).toBe('Feather Toy (Copy 2)');
+  describe('generateId', () => {
+    it('should generate a valid UUID shape even if crypto.randomUUID is not available', () => {
+      // Temporarily mock crypto.randomUUID to undefined
+      const originalUUID = crypto.randomUUID;
+      Object.defineProperty(crypto, 'randomUUID', {
+        value: undefined,
+        writable: true,
+        configurable: true,
+      });
+
+      try {
+        const id = generateId();
+        expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      } finally {
+        // Restore
+        Object.defineProperty(crypto, 'randomUUID', {
+          value: originalUUID,
+          writable: true,
+          configurable: true,
+        });
+      }
+    });
+
+    it('should use crypto.randomUUID when available', () => {
+      const originalUUID = crypto.randomUUID;
+      if (typeof originalUUID === 'function') {
+        const spy = vi.spyOn(crypto, 'randomUUID');
+        const id = generateId();
+        expect(spy).toHaveBeenCalled();
+        expect(id).toBeDefined();
+        spy.mockRestore();
+      }
     });
   });
 });

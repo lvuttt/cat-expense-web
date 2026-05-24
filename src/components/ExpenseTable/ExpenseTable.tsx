@@ -5,9 +5,10 @@
  * Delegates individual row rendering to ExpenseRow (SRP separation).
  */
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import type { Expense, Category, SortField, SortConfig } from '../../types';
 import { isInTopCategory } from '../../utils/expenseUtils';
+import { useVirtualList } from '../../hooks/useVirtualList';
 import { ExpenseRow } from '../ExpenseRow/ExpenseRow';
 import './ExpenseTable.css';
 
@@ -23,6 +24,29 @@ interface ExpenseTableProps {
   readonly onToggleSelect: (id: string) => void;
   readonly onEdit: (expense: Expense) => void;
   readonly onDuplicate: (id: string) => void;
+}
+
+/** Detects row height dynamically based on viewport media query size. */
+function useRowHeight(): number {
+  const [height, setHeight] = useState(52);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      const width = window.innerWidth;
+      if (width < 500) {
+        setHeight(84); // Mobile card layout height
+      } else if (width < 768) {
+        setHeight(40); // Tablet compressed row height
+      } else {
+        setHeight(52); // Desktop row height
+      }
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  return height;
 }
 
 /** Sortable column configuration — OCP: add new columns here. */
@@ -51,6 +75,12 @@ export function ExpenseTable({
 }: ExpenseTableProps) {
   const hasExpenses = expenses.length > 0;
   const checkboxRef = useRef<HTMLInputElement>(null);
+  const rowHeight = useRowHeight();
+
+  const { containerRef, visibleItems, paddingTop, paddingBottom } = useVirtualList({
+    items: expenses,
+    rowHeight,
+  });
 
   useEffect(() => {
     if (checkboxRef.current) {
@@ -141,31 +171,43 @@ export function ExpenseTable({
       </div>
 
       {/* Table Body */}
-      <div className="expense-table__body" role="rowgroup">
-        {hasExpenses ? (
-          expenses.map((expense, index) => (
-            <div key={expense.id} style={{ animationDelay: `${index * 30}ms` }}>
-              <ExpenseRow
-                expense={expense}
-                isHighlighted={isInTopCategory(expense, topCategories)}
-                isSelected={isSelected(expense.id)}
-                onToggleSelect={onToggleSelect}
-                onEdit={onEdit}
-                onDuplicate={onDuplicate}
-              />
+      <div
+        className="expense-table__body"
+        role="rowgroup"
+        ref={containerRef}
+      >
+        <div
+          className="expense-table__inner"
+          style={{
+            paddingTop: `${paddingTop}px`,
+            paddingBottom: `${paddingBottom}px`,
+          }}
+        >
+          {hasExpenses ? (
+            visibleItems.map(({ item: expense, originalIndex }) => (
+              <div key={expense.id} style={{ animationDelay: `${originalIndex * 30}ms` }}>
+                <ExpenseRow
+                  expense={expense}
+                  isHighlighted={isInTopCategory(expense, topCategories)}
+                  isSelected={isSelected(expense.id)}
+                  onToggleSelect={onToggleSelect}
+                  onEdit={onEdit}
+                  onDuplicate={onDuplicate}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="expense-table__empty" role="row">
+              <span className="expense-table__empty-icon" aria-hidden="true">
+                😺
+              </span>
+              <p className="expense-table__empty-title">No expenses yet</p>
+              <p className="expense-table__empty-text">
+                Click &quot;Add Expense&quot; to start tracking your cat&apos;s spending!
+              </p>
             </div>
-          ))
-        ) : (
-          <div className="expense-table__empty" role="row">
-            <span className="expense-table__empty-icon" aria-hidden="true">
-              😺
-            </span>
-            <p className="expense-table__empty-title">No expenses yet</p>
-            <p className="expense-table__empty-text">
-              Click &quot;Add Expense&quot; to start tracking your cat&apos;s spending!
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

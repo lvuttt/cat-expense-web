@@ -108,15 +108,31 @@
   }
 }
 
-/* Small mobile (< 500px): wrap and fill width */
+/* Small mobile (< 500px): reflow buttons to a clean primary/secondary grid */
 @media (max-width: 499px) {
   .action-bar {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
   }
 
   .action-bar__button {
-    flex: 1;
+    width: 100%;
     justify-content: center;
-    min-width: 120px;
+  }
+
+  /* Add Expense button (primary) spans both columns */
+  .action-bar__button--primary {
+    grid-column: 1 / -1;
+  }
+
+  /* Secondary/Danger buttons (Delete, Export) stay side-by-side */
+  .action-bar__button--danger,
+  .action-bar__button--secondary {
+    grid-column: span 1;
+    padding: var(--space-sm) var(--space-xs);
+    font-size: 0.8rem;
+    gap: var(--space-xs);
   }
 }

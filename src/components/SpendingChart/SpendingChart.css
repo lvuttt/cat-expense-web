@@ -134,11 +134,18 @@
 }
 
 @media (max-width: 499px) {
+  .spending-chart {
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+
   .spending-chart__row {
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto;
     row-gap: var(--space-xs);
     column-gap: var(--space-sm);
+    padding: var(--space-xs) 0;
   }
 
   .spending-chart__label {

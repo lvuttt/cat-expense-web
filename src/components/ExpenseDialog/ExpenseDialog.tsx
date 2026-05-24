@@ -55,9 +55,53 @@ export function ExpenseDialog({
   const [amount, setAmount] = useState(initialValues.amount);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [viewportStyle, setViewportStyle] = useState<React.CSSProperties>({});
+  const [contentMaxHeight, setContentMaxHeight] = useState<string>('');
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Monitor visual viewport height on mobile to shrink dialog overlay and content when keyboard is active
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const visualViewport = typeof window !== 'undefined' ? window.visualViewport : null;
+    if (!isOpen || !visualViewport) {
+      setViewportStyle({});
+      setContentMaxHeight('');
+      return;
+    }
+
+    const handleResize = () => {
+      // On mobile viewports (< 500px wide)
+      if (window.innerWidth < 500) {
+        setViewportStyle({
+          position: 'fixed',
+          top: `${visualViewport.offsetTop}px`,
+          left: `${visualViewport.offsetLeft}px`,
+          height: `${visualViewport.height}px`,
+          width: `${visualViewport.width}px`,
+          alignItems: 'flex-end',
+          padding: 0,
+        });
+        // Limit dialog content height to viewport height minus top gap
+        setContentMaxHeight(`${visualViewport.height - 16}px`);
+      } else {
+        setViewportStyle({});
+        setContentMaxHeight('');
+      }
+    };
+
+    visualViewport.addEventListener('resize', handleResize);
+    visualViewport.addEventListener('scroll', handleResize);
+
+    handleResize();
+
+    return () => {
+      visualViewport.removeEventListener('resize', handleResize);
+      visualViewport.removeEventListener('scroll', handleResize);
+    };
+  }, [isOpen]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Reset form state when dialog opens or mode changes
   useEffect(() => {
@@ -205,8 +249,13 @@ export function ExpenseDialog({
       aria-modal="true"
       aria-label={title}
       id="expense-dialog"
+      style={viewportStyle}
     >
-      <div className="expense-dialog__content" ref={contentRef}>
+      <div
+        className="expense-dialog__content"
+        ref={contentRef}
+        style={contentMaxHeight ? { maxHeight: contentMaxHeight } : undefined}
+      >
         {/* Header */}
         <div className="expense-dialog__header">
           <h2 className="expense-dialog__title">{title}</h2>

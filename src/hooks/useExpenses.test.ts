@@ -94,7 +94,7 @@ describe('useExpenses hook', () => {
 
     expect(result.current.expenses.length).toBe(3);
     expect(result.current.expenses[2]).toMatchObject({
-      name: 'Catnip (Copy)',
+      name: 'Catnip',
       category: 'Accessory',
       amount: 5.0,
     });

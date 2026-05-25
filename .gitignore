@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 build
-.svelte-kit
+#.svelte-kit
 test-results
 playwright-report
 *.local

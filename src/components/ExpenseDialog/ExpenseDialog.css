@@ -70,11 +70,9 @@
 .expense-dialog__cat-fact {
   margin: 0;
   padding: var(--space-lg);
-  background: linear-gradient(
-    135deg,
-    var(--color-bg-glass) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-bg-glass) 0%,
+      rgba(255, 255, 255, 0.02) 100%);
   border: 1px solid var(--color-bg-glass-border);
   border-radius: var(--radius-lg);
   display: flex;
@@ -171,8 +169,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .expense-dialog__cat-fact-refresh--spinning {

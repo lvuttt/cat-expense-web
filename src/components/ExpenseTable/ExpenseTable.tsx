@@ -5,7 +5,7 @@
  * Delegates individual row rendering to ExpenseRow (SRP separation).
  */
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import type { Expense, Category, SortField, SortConfig } from '../../types';
 import { isInTopCategory } from '../../utils/expenseUtils';
 import { useVirtualList } from '../../hooks/useVirtualList';
@@ -26,28 +26,7 @@ interface ExpenseTableProps {
   readonly onDuplicate: (id: string) => void;
 }
 
-/** Detects row height dynamically based on viewport media query size. */
-function useRowHeight(): number {
-  const [height, setHeight] = useState(52);
-
-  useEffect(() => {
-    const updateHeight = () => {
-      const width = window.innerWidth;
-      if (width < 500) {
-        setHeight(48); // Mobile table row height
-      } else if (width < 768) {
-        setHeight(40); // Tablet compressed row height
-      } else {
-        setHeight(52); // Desktop row height
-      }
-    };
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
-  }, []);
-
-  return height;
-}
+const ROW_HEIGHT = 48;
 
 /** Sortable column configuration — OCP: add new columns here. */
 const SORTABLE_COLUMNS: Array<{
@@ -75,11 +54,10 @@ export function ExpenseTable({
 }: ExpenseTableProps) {
   const hasExpenses = expenses.length > 0;
   const checkboxRef = useRef<HTMLInputElement>(null);
-  const rowHeight = useRowHeight();
 
   const { containerRef, visibleItems, totalHeight } = useVirtualList({
     items: expenses,
-    rowHeight,
+    rowHeight: ROW_HEIGHT,
   });
 
   useEffect(() => {
@@ -92,7 +70,7 @@ export function ExpenseTable({
     <div
       className="expense-table"
       id="expense-table"
-      role="grid"
+      role="table"
       aria-label="Expense list"
     >
       {/* Table Header */}
@@ -125,9 +103,10 @@ export function ExpenseTable({
             .join(' ');
 
           return (
-            <div
+            <button
               key={field}
               className={cellClasses}
+              type="button"
               role="columnheader"
               aria-sort={
                 isSorted
@@ -137,13 +116,6 @@ export function ExpenseTable({
                   : 'none'
               }
               onClick={() => onSort(field)}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSort(field);
-                }
-              }}
             >
               {label}
               {isSorted && (
@@ -157,7 +129,7 @@ export function ExpenseTable({
                   ▲
                 </span>
               )}
-            </div>
+            </button>
           );
         })}
 
@@ -186,12 +158,9 @@ export function ExpenseTable({
             visibleItems.map(({ item: expense, originalIndex }) => (
               <div
                 key={expense.id}
+                className="expense-table__row-wrapper"
                 style={{
-                  position: 'absolute',
-                  top: `${originalIndex * rowHeight}px`,
-                  left: 0,
-                  right: 0,
-                  height: `${rowHeight}px`,
+                  top: `${originalIndex * ROW_HEIGHT}px`,
                 }}
               >
                 <ExpenseRow

@@ -68,7 +68,7 @@ export const ExpenseRow = memo(function ExpenseRow({
     >
       <div 
         className="expense-row__cell expense-row__cell--checkbox" 
-        role="gridcell"
+        role="cell"
         onClick={(e) => e.stopPropagation()}
       >
         <input
@@ -83,7 +83,7 @@ export const ExpenseRow = memo(function ExpenseRow({
 
       <div
         className="expense-row__cell expense-row__cell--name"
-        role="gridcell"
+        role="cell"
         data-tooltip={showTooltip ? expense.name : undefined}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -91,20 +91,20 @@ export const ExpenseRow = memo(function ExpenseRow({
         <span ref={nameRef} className="expense-row__name-text">{expense.name}</span>
       </div>
 
-      <div className="expense-row__cell expense-row__cell--category" role="gridcell">
+      <div className="expense-row__cell expense-row__cell--category" role="cell">
         <span className={badgeClass}>
           <span aria-hidden="true">{categoryMeta.emoji}</span>
           {categoryMeta.label}
         </span>
       </div>
 
-      <div className="expense-row__cell expense-row__cell--amount" role="gridcell">
+      <div className="expense-row__cell expense-row__cell--amount" role="cell">
         {formatCurrency(expense.amount)}
       </div>
 
       <div 
         className="expense-row__cell expense-row__cell--actions" 
-        role="gridcell"
+        role="cell"
         onClick={(e) => e.stopPropagation()}
       >
         <button

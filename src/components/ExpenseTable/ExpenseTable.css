@@ -51,8 +51,19 @@
 
 /* Sortable header styling */
 .expense-table__header-cell--sortable {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), background var(--transition-fast);
   border-radius: var(--radius-xs);
   padding: var(--space-2xs) var(--space-xs);
   margin: calc(-1 * var(--space-2xs)) calc(-1 * var(--space-xs));
@@ -135,6 +146,14 @@
   position: relative;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Row wrapper for absolute positioning */
+.expense-table__row-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
 }
 
 /* Webkit scrollbar styling */

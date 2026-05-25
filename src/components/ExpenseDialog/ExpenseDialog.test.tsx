@@ -10,7 +10,7 @@ vi.mock('../../hooks/useCatFact', () => ({
 
 describe('ExpenseDialog component', () => {
   const mockRefetch = vi.fn();
-  
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useCatFact).mockReturnValue({
@@ -30,8 +30,8 @@ describe('ExpenseDialog component', () => {
       <ExpenseDialog
         isOpen={false}
         mode={{ type: 'add' }}
-        onClose={() => {}}
-        onSubmit={() => {}}
+        onClose={() => { }}
+        onSubmit={() => { }}
       />
     );
     expect(container.firstChild).toBeNull();
@@ -42,8 +42,8 @@ describe('ExpenseDialog component', () => {
       <ExpenseDialog
         isOpen={true}
         mode={{ type: 'add' }}
-        onClose={() => {}}
-        onSubmit={() => {}}
+        onClose={() => { }}
+        onSubmit={() => { }}
       />
     );
 
@@ -65,8 +65,8 @@ describe('ExpenseDialog component', () => {
       <ExpenseDialog
         isOpen={true}
         mode={editMode}
-        onClose={() => {}}
-        onSubmit={() => {}}
+        onClose={() => { }}
+        onSubmit={() => { }}
       />
     );
 
@@ -82,7 +82,7 @@ describe('ExpenseDialog component', () => {
       <ExpenseDialog
         isOpen={true}
         mode={{ type: 'add' }}
-        onClose={() => {}}
+        onClose={() => { }}
         onSubmit={onSubmit}
       />
     );
@@ -105,8 +105,8 @@ describe('ExpenseDialog component', () => {
       <ExpenseDialog
         isOpen={true}
         mode={{ type: 'add' }}
-        onClose={() => {}}
-        onSubmit={() => {}}
+        onClose={() => { }}
+        onSubmit={() => { }}
       />
     );
 
@@ -125,7 +125,7 @@ describe('ExpenseDialog component', () => {
         isOpen={true}
         mode={{ type: 'add' }}
         onClose={onClose}
-        onSubmit={() => {}}
+        onSubmit={() => { }}
       />
     );
 

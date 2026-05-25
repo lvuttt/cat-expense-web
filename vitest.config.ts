@@ -1,12 +1,19 @@
 import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import path from 'path';
 
 /**
  * Vitest configuration.
  * Configured to scan only unit tests in the src directory and ignore Playwright specs in the e2e-tests directory.
  */
 export default defineConfig({
-  plugins: [react()],
+  plugins: [svelte({ hot: !process.env.VITEST })],
+  resolve: {
+    alias: {
+      '$lib': path.resolve(__dirname, './src/lib'),
+      '$app/paths': path.resolve(__dirname, './src/lib/mocks/appPaths.ts'),
+    },
+  },
   test: {
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],

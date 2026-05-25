@@ -1,0 +1,92 @@
+{
+  ".svelte-kit/generated/client-optimized/app.js": {
+    "file": "_app/immutable/entry/app.KjqEJ_fc.js",
+    "name": "entry/app",
+    "src": ".svelte-kit/generated/client-optimized/app.js",
+    "isEntry": true,
+    "imports": [
+      "_B3X8v697.js",
+      "_xihTtKlq.js"
+    ],
+    "dynamicImports": [
+      ".svelte-kit/generated/client-optimized/nodes/0.js",
+      ".svelte-kit/generated/client-optimized/nodes/1.js",
+      ".svelte-kit/generated/client-optimized/nodes/2.js"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/0.js": {
+    "file": "_app/immutable/nodes/0.41jwnll8.js",
+    "name": "nodes/0",
+    "src": ".svelte-kit/generated/client-optimized/nodes/0.js",
+    "isEntry": true,
+    "imports": [
+      "_B3X8v697.js",
+      "_xihTtKlq.js"
+    ],
+    "css": [
+      "_app/immutable/assets/0.DR5M-t--.css"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/1.js": {
+    "file": "_app/immutable/nodes/1.BHk8z-Cm.js",
+    "name": "nodes/1",
+    "src": ".svelte-kit/generated/client-optimized/nodes/1.js",
+    "isEntry": true,
+    "imports": [
+      "_BFrDinHx.js",
+      "_B3X8v697.js",
+      "_xihTtKlq.js",
+      "_Ca-wiM1s.js"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/2.js": {
+    "file": "_app/immutable/nodes/2.DHxkoRbC.js",
+    "name": "nodes/2",
+    "src": ".svelte-kit/generated/client-optimized/nodes/2.js",
+    "isEntry": true,
+    "imports": [
+      "_B3X8v697.js",
+      "_xihTtKlq.js",
+      "_Ca-wiM1s.js"
+    ],
+    "css": [
+      "_app/immutable/assets/2.COCiP2__.css"
+    ]
+  },
+  "_B3X8v697.js": {
+    "file": "_app/immutable/chunks/B3X8v697.js",
+    "name": "index-client"
+  },
+  "_BFrDinHx.js": {
+    "file": "_app/immutable/chunks/BFrDinHx.js",
+    "name": "client",
+    "imports": [
+      "_CI3aoYWF.js",
+      "_B3X8v697.js"
+    ]
+  },
+  "_CI3aoYWF.js": {
+    "file": "_app/immutable/chunks/CI3aoYWF.js",
+    "name": "environment"
+  },
+  "_Ca-wiM1s.js": {
+    "file": "_app/immutable/chunks/Ca-wiM1s.js",
+    "name": "legacy",
+    "imports": [
+      "_B3X8v697.js"
+    ]
+  },
+  "_xihTtKlq.js": {
+    "file": "_app/immutable/chunks/xihTtKlq.js",
+    "name": "disclose-version"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/client/entry.js": {
+    "file": "_app/immutable/entry/start.DeSGxjLv.js",
+    "name": "entry/start",
+    "src": "node_modules/@sveltejs/kit/src/runtime/client/entry.js",
+    "isEntry": true,
+    "imports": [
+      "_BFrDinHx.js"
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-import type { Expense, ExpenseFormData } from '../types';
+import type { Expense, ExpenseFormData } from '../types/models';
 import type { IStorageService } from '../services/storageService';
 import {
   createExpense,

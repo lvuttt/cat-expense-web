@@ -1,6 +1,6 @@
 import { onDestroy } from 'svelte';
 import { fetchCatFact, getCachedFacts } from '../services/catFactService';
-import { FALLBACK_CAT_FACT } from '../constants';
+import { FALLBACK_CAT_FACT } from '../constants/app';
 
 const getOfflineFact = (): string => {
   const cached = getCachedFacts();

@@ -3,8 +3,8 @@
  * Validation logic is extracted from components into pure functions.
  */
 
-import type { ExpenseFormData } from '../types';
-import { VALIDATION } from '../constants';
+import type { ExpenseFormData } from '../types/models';
+import { VALIDATION } from '../constants/app';
 
 /**
  * Map of field names to their validation error messages.

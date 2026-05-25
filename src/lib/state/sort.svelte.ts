@@ -1,4 +1,4 @@
-import type { SortField, SortConfig } from '../types';
+import type { SortField, SortConfig } from '../types/models';
 import { toggleSortDirection } from '../utils/sortUtils';
 
 export const createSort = (defaultField: SortField = 'name') => {

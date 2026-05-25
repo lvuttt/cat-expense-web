@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { Expense } from '../types';
+import type { Expense } from '../types/models';
 import {
   csvQuote,
   expensesToCsv,

@@ -1,5 +1,10 @@
 <script lang="ts">
-  import type { Expense, Category, SortField, SortConfig } from '$lib/types';
+  import type {
+    Expense,
+    Category,
+    SortField,
+    SortConfig,
+  } from '$lib/types/models';
   import { isInTopCategory } from '$lib/utils/expenseUtils';
   import { createVirtualList } from '$lib/state/virtualList.svelte';
   import ExpenseRow from '$lib/components/ExpenseRow.svelte';

@@ -1,6 +1,10 @@
 <script lang="ts">
-  import type { ExpenseFormData, Category, DialogMode } from '$lib/types';
-  import { CATEGORIES, CATEGORY_CONFIG } from '$lib/constants';
+  import type {
+    ExpenseFormData,
+    Category,
+    DialogMode,
+  } from '$lib/types/models';
+  import { CATEGORIES, CATEGORY_CONFIG } from '$lib/constants/app';
   import {
     validateExpenseForm,
     hasErrors,

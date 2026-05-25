@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { Expense, Category } from '../types';
+import type { Expense, Category } from '../types/models';
 import {
   calculateTotal,
   sumByCategory,

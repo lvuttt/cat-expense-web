@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { Expense } from '../types';
+import type { Expense } from '../types/models';
 import { sortExpenses, toggleSortDirection } from './sortUtils';
 
 describe('sortUtils', () => {

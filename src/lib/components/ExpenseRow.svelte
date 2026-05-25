@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Expense } from '$lib/types';
-  import { CATEGORY_CONFIG } from '$lib/constants';
+  import type { Expense } from '$lib/types/models';
+  import { CATEGORY_CONFIG } from '$lib/constants/app';
   import { formatCurrency } from '$lib/utils/formatUtils';
 
   interface Props {

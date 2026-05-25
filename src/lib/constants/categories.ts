@@ -1,4 +1,4 @@
-import type { CategoryMeta } from '../types';
+import type { CategoryMeta } from '../types/models';
 
 /**
  * Immutable array of all available expense categories.

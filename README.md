@@ -1,29 +1,34 @@
 # Cat Expense Tracker 🐾
 
-A premium, responsive React + TypeScript frontend web application to log and track expenses for your feline friends. Features automatic currency calculation, top category highlighting, dynamic cat facts integration, and offline-tolerant storage.
+A premium, responsive **Svelte 5 + SvelteKit + TypeScript** web app to log and track expenses for your feline friends. Features automatic currency calculation, top-category highlighting, dynamic cat facts, and offline-tolerant local storage.
 
 ---
 
 ## ✨ Features
 
-- **Expense Management**: Easy CRUD operations to Add, Edit, and Delete expenses.
-- **Item Duplication**: Quickly duplicate existing expenses to log recurring items.
-- **Smart Highlighting & Tie-Breakers**: Automatically highlights all rows belonging to the category with the highest total spend (handling ties dynamically using integer cents arithmetic).
-- **Sortable Ledger Table**: Sort by item name, category, or amount in ascending/descending order.
-- **Random Cat Facts Panel**: Intergrates with a public API to fetch random cat facts when the dialog is opened (includes loading states, offline fallbacks, and AbortController race-condition mitigation).
-- **Responsive Layout**: Adapts smoothly to mobile viewports (stacked layout with compact banner) and desktop/ultra-wide screens (side-by-side split view).
-- **Premium Design & Micro-interactions**: Sleek dark mode, custom fonts, glassmorphism overlays, and smooth hover animations.
+- **Expense management**: Add, edit, delete, and duplicate expenses.
+- **Smart highlighting**: Highlights all rows in the highest-spending category, including ties (integer-cents arithmetic).
+- **Sortable table**: Sort by item name, category, or amount (asc/desc).
+- **Random cat facts**: Fetches a fact when the expense dialog opens, with loading UI, offline cache, and `AbortController` cleanup.
+- **Responsive layout**: Mobile stacked dialog; desktop side-by-side form and fact panel; ultra-wide scaling via CSS tokens.
+- **Premium UI**: Dark theme, glassmorphism, BEM-scoped component CSS, and hover micro-interactions.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🛠️ Tech Stack
 
-- **Core**: React 19, TypeScript, Vite
-- **Styling**: Pure Vanilla CSS following strict **BEM (Block-Element-Modifier)** naming conventions.
-- **SOLID Principles**:
-  - _Single Responsibility_: State synchronization, API calls, and calculations are kept isolated from presentation layouts.
-  - _Open/Closed_: Adding new categories or sorting strategies is configuration-driven and requires no component changes.
-  - _Dependency Inversion_: Custom hooks receive an abstract `IStorageService` interface, allowing easy mocking/swapping of the storage layers.
+| Layer           | Choice                                            |
+| --------------- | ------------------------------------------------- |
+| UI              | Svelte 5 (Runes: `$state`, `$derived`, `$effect`) |
+| Routing / build | SvelteKit 2, `@sveltejs/adapter-static`           |
+| Language        | TypeScript                                        |
+| Bundler         | Vite 6                                            |
+| Styling         | Vanilla CSS (BEM), co-located in `.svelte` files  |
+| Unit tests      | Vitest, `@testing-library/svelte`, jsdom          |
+| E2E / visual    | Playwright                                        |
+| Formatting      | Prettier + `prettier-plugin-svelte`               |
+
+**Architecture highlights**: SOLID-oriented modules — pure utils, injectable `IStorageService`, configuration-driven categories and sort strategies, discriminated `DialogMode` for add/edit.
 
 ---
 
@@ -31,87 +36,113 @@ A premium, responsive React + TypeScript frontend web application to log and tra
 
 ### Prerequisites
 
-- **Node.js**: `22.14.0` (managed via `asdf` with `.tool-versions`)
-- **Package Manager**: `Yarn`
+- **Node.js** `22.14.0` (see `.tool-versions` if you use `asdf`)
+- **Yarn** 1.x
 
-### Setup Commands
+### Commands
 
-1. **Install Dependencies**:
+```bash
+# Install dependencies
+yarn install
 
-   ```bash
-   yarn install
-   ```
+# Start dev server (http://localhost:5173)
+yarn dev
 
-2. **Start Local Development Server**:
+# Lint
+yarn lint
 
-   ```bash
-   yarn dev
-   ```
+# Format source with Prettier
+yarn format
 
-   Open [http://localhost:5173](http://localhost:5173) in your browser.
+# Unit tests (utilities, services, all Svelte components, routes)
+yarn test
 
-3. **Production Build**:
-   ```bash
-   yarn build
-   ```
-   Generates production assets in the `/dist` directory.
+# Production build → ./build
+yarn build
+
+# Preview production build locally
+yarn preview
+```
 
 ---
 
-## 🧪 Testing Suites
+## 📁 Project Layout (summary)
 
-The project has 100% test coverage across Unit, E2E, and Visual Regression testing levels.
+```
+src/
+├── routes/           # +page.svelte (dashboard), +layout.svelte (shell)
+└── lib/
+    ├── components/   # Svelte UI + *.test.ts
+    ├── state/        # Runes state (*.svelte.ts)
+    ├── types/        # models.ts re-exports expense, sort, dialog types
+    ├── constants/    # app.ts (keys, API, validation), categories.ts
+    ├── services/     # localStorage + cat fact API
+    ├── utils/        # Pure helpers
+    ├── mocks/        # Vitest shims (e.g. $app/paths)
+    └── test/         # Shared test fixtures & snippet hosts
+```
 
-### 1. Unit Tests (Vitest)
+Import types and shared constants from explicit modules:
 
-Unit tests cover all utilities, service clients, custom hooks, and React UI components. Tests run in a simulated browser DOM (`jsdom`) utilizing React Testing Library.
+```ts
+import type { Expense } from '$lib/types/models';
+import { STORAGE_KEY } from '$lib/constants/app';
+```
 
-- **Location**: Co-located side-by-side with source files in `src/` (e.g., `src/App.test.tsx`, `src/utils/expenseUtils.test.ts`).
-- **Run Unit Tests**:
-  ```bash
-  yarn test
-  ```
+See [agents.md](agents.md) for full onboarding detail.
 
-### 2. E2E Tests (Playwright)
+---
 
-End-to-End tests verify user workflows like adding/editing/deplicating rows, multi-select deletion, sorting columns, and reloading persistence.
+## 🧪 Testing
 
-- **Location**: `e2e-tests/expenseHighlight.spec.ts`.
-- **Run E2E Tests**:
-  ```bash
-  yarn test:e2e
-  ```
+### Unit tests (Vitest)
 
-### 3. Visual Regression Tests (Playwright)
+- Co-located `*.test.ts` next to components, utils, services, and routes.
+- Svelte components tested with `@testing-library/svelte` in a real DOM (`jsdom`).
+- **Run**: `yarn test`
 
-Validates UI and layout consistency across desktop and mobile viewports by taking screenshot diffs. Network calls are mocked to ensure deterministic results.
+### E2E tests (Playwright)
 
-- **Location**: `visual-tests/expenseVisual.spec.ts`.
-- **Run Visual Tests**:
-  ```bash
-  yarn test:visual
-  ```
-- **Update Baseline Snapshots**:
-  ```bash
-  yarn test:visual --update-snapshots
-  ```
+- User flows: add/edit/duplicate/delete, sort, selection, highlighting, persistence.
+- **Location**: `e2e-tests/expenseHighlight.spec.ts`
+- **Run**: `yarn test:e2e`
+
+### Visual regression (Playwright)
+
+- Screenshot baselines for desktop/mobile layouts.
+- **Location**: `visual-tests/expenseVisual.spec.ts`
+- **Run**: `yarn test:visual`
+- **Update baselines**: `yarn test:visual --update-snapshots`
 
 ---
 
 ## 🚀 CI/CD & Deployment
 
-The application includes an automated deployment pipeline to host the web app on **GitHub Pages** for free.
+Pushes to **`main`** trigger [.github/workflows/deploy.yml](.github/workflows/deploy.yml):
 
-### GitHub Actions Pipeline
+1. `yarn install --frozen-lockfile`
+2. `yarn lint`
+3. `yarn test`
+4. `yarn build`
+5. Deploy `./build` to **GitHub Pages**
 
-The deployment workflow is configured in [.github/workflows/deploy.yml](file:///.github/workflows/deploy.yml). When you push code changes to the `main` or `master` branches, it automatically:
+The app `base` path is set from `GITHUB_REPOSITORY` in CI so assets load under `https://<user>.github.io/<repo>/`. Local dev uses `/`.
 
-1. Installs project dependencies (`yarn install --frozen-lockfile`).
-2. Performs lint checks (`yarn lint`).
-3. Executes the full unit test suite (`yarn test`).
-4. Compiles TypeScript and builds the production bundle (`yarn build`).
-5. Deploys the static assets directly to GitHub Pages via the official, modern GitHub Pages deployment API (`actions/deploy-pages`).
+Generated folders (`build/`, `.svelte-kit/`) are gitignored — do not commit build output.
 
-### Dynamic Base Paths
+Optional manual deploy (CLI): `yarn deploy` (uses `gh-pages` and the `build/` directory).
 
-To ensure assets load properly when deployed to a custom subpath on GitHub Pages (e.g., `https://<username>.github.io/<repository-name>/`) while maintaining standard root routing during local development, [vite.config.ts](file:///Users/nyoodee/Private/cat-expense-web/vite.config.ts) dynamically resolves the Vite `base` URL using the `GITHUB_REPOSITORY` environment variable provided by GitHub Actions.
+---
+
+## 📜 Scripts Reference
+
+| Script             | Description                                   |
+| ------------------ | --------------------------------------------- |
+| `yarn dev`         | Vite dev server                               |
+| `yarn build`       | `tsc -b` + static production build → `build/` |
+| `yarn preview`     | Serve `build/` locally                        |
+| `yarn lint`        | ESLint                                        |
+| `yarn format`      | Prettier (includes `.svelte`)                 |
+| `yarn test`        | Vitest unit tests                             |
+| `yarn test:e2e`    | Playwright E2E                                |
+| `yarn test:visual` | Playwright visual regression                  |

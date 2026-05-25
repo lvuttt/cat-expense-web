@@ -9,7 +9,7 @@
  *   - Double quotes inside quoted fields are escaped by doubling them ("").
  */
 
-import type { Expense } from '../types';
+import type { Expense } from '../types/models';
 import { formatCurrency, formatDate } from './formatUtils';
 
 /**

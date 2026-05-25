@@ -1,8 +1,8 @@
 /**
- * Barrel file — re-exports all type definitions for convenient imports.
+ * Re-exports domain type definitions for convenient imports.
  *
  * Usage:
- *   import type { Expense, Category, SortConfig, DialogMode } from '../types';
+ *   import type { Expense, Category, SortConfig, DialogMode } from '$lib/types/models';
  */
 export type {
   Expense,

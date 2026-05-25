@@ -14,7 +14,7 @@ import {
   CAT_FACT_API_URL,
   CAT_FACT_CACHE_KEY,
   CAT_FACT_CACHE_MAX,
-} from '../constants';
+} from '../constants/app';
 
 /** Shape of the response from catfact.ninja/fact */
 interface CatFactApiResponse {

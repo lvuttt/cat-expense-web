@@ -3,7 +3,7 @@
  * No side effects — easily unit-testable.
  */
 
-import type { Expense, Category, ExpenseFormData } from '../types';
+import type { Expense, Category, ExpenseFormData } from '../types/models';
 
 /**
  * Calculates the total amount across all expenses.

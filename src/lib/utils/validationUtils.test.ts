@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateExpenseForm, hasErrors } from './validationUtils';
-import { VALIDATION } from '../constants';
+import { VALIDATION } from '../constants/app';
 
 describe('validationUtils', () => {
   describe('validateExpenseForm', () => {

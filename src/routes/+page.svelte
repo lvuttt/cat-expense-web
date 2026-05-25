@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Expense, ExpenseFormData, DialogMode } from '$lib/types';
-  import { STORAGE_KEY } from '$lib/constants';
+  import type { Expense, ExpenseFormData, DialogMode } from '$lib/types/models';
+  import { STORAGE_KEY } from '$lib/constants/app';
   import { LocalStorageService } from '$lib/services/storageService';
   import { createExpenses } from '$lib/state/expenses.svelte';
   import { createSelection } from '$lib/state/selection.svelte';

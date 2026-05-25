@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ExpenseFormData, DialogMode } from '$lib/types';
+  import type { ExpenseFormData, DialogMode } from '$lib/types/models';
   import { createCatFact } from '$lib/state/catFact.svelte';
   import { focusTrap } from '$lib/utils/focusTrap';
   import CatFactPanel from '$lib/components/CatFactPanel.svelte';

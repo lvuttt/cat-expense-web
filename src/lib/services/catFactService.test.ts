@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { fetchCatFact, getCachedFacts, cacheFact } from './catFactService';
-import { CAT_FACT_CACHE_KEY, CAT_FACT_CACHE_MAX } from '../constants';
+import { CAT_FACT_CACHE_KEY, CAT_FACT_CACHE_MAX } from '../constants/app';
 
 describe('catFactService', () => {
   beforeEach(() => {

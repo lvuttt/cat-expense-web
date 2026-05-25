@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Expense, Category } from '$lib/types';
-  import { CATEGORIES, CATEGORY_CONFIG } from '$lib/constants';
+  import type { Expense, Category } from '$lib/types/models';
+  import { CATEGORIES, CATEGORY_CONFIG } from '$lib/constants/app';
   import { sumByCategory } from '$lib/utils/expenseUtils';
   import { formatCurrency } from '$lib/utils/formatUtils';
 

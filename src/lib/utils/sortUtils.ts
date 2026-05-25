@@ -4,8 +4,8 @@
  * no existing component logic needs to change.
  */
 
-import type { Expense } from '../types';
-import type { SortField, SortDirection, SortConfig } from '../types';
+import type { Expense } from '../types/models';
+import type { SortField, SortDirection, SortConfig } from '../types/models';
 
 /** Comparison function signature. */
 type CompareFn = (a: Expense, b: Expense) => number;

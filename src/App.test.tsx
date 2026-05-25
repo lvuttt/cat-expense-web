@@ -2,9 +2,14 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import App from './App';
 import { useCatFact } from './hooks/useCatFact';
+import { exportExpensesToCsv } from './utils/csvUtils';
 
 vi.mock('./hooks/useCatFact', () => ({
   useCatFact: vi.fn(),
+}));
+
+vi.mock('./utils/csvUtils', () => ({
+  exportExpensesToCsv: vi.fn(),
 }));
 
 describe('App Integration', () => {
@@ -97,4 +102,31 @@ describe('App Integration', () => {
     });
     expect(screen.getByText('No expenses yet')).toBeDefined();
   });
+
+  it('should disable the export button when empty and invoke exportExpensesToCsv when clicked with data', async () => {
+    render(<App />);
+
+    // 1. Initially disabled
+    const exportBtn = screen.getByRole('button', { name: /Export all expenses as CSV/i });
+    expect(exportBtn.hasAttribute('disabled')).toBe(true);
+
+    // 2. Add an expense
+    fireEvent.click(screen.getByRole('button', { name: /Add Expense/i }));
+    fireEvent.change(screen.getByLabelText('Item Name'), { target: { value: 'Catnip Toy' } });
+    fireEvent.change(screen.getByLabelText('Category'), { target: { value: 'Accessory' } });
+    fireEvent.change(screen.getByLabelText('Amount ($)'), { target: { value: '5.99' } });
+    fireEvent.submit(screen.getByRole('button', { name: 'Submit' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Catnip Toy')).toBeDefined();
+    });
+
+    // 3. Now enabled
+    expect(exportBtn.hasAttribute('disabled')).toBe(false);
+
+    // 4. Click export and verify call
+    fireEvent.click(exportBtn);
+    expect(exportExpensesToCsv).toHaveBeenCalled();
+  });
 });
+

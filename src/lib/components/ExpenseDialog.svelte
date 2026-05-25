@@ -35,7 +35,8 @@
   let contentMaxHeight = $state<string>('');
 
   $effect(() => {
-    const visualViewport = typeof window !== 'undefined' ? window.visualViewport : null;
+    const visualViewport =
+      typeof window !== 'undefined' ? window.visualViewport : null;
     if (!isOpen || !visualViewport) {
       viewportStyle = '';
       contentMaxHeight = '';
@@ -134,11 +135,7 @@
 
       <!-- Dialog Body containing form and fact panel -->
       <div class="expense-dialog__body">
-        <ExpenseForm
-          {mode}
-          {onSubmit}
-          bind:nameInputRef={nameInputEl}
-        />
+        <ExpenseForm {mode} {onSubmit} bind:nameInputRef={nameInputEl} />
 
         <CatFactPanel
           fact={catFactState.fact}
@@ -223,9 +220,11 @@
   :global(.expense-dialog__cat-fact) {
     margin: 0;
     padding: var(--space-lg);
-    background: linear-gradient(135deg,
-        var(--color-bg-glass) 0%,
-        rgba(255, 255, 255, 0.02) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-bg-glass) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
     border: 1px solid var(--color-bg-glass-border);
     border-radius: var(--radius-lg);
     display: flex;
@@ -269,11 +268,14 @@
     max-width: var(--cat-fact-text-max-width);
   }
 
-  :global(.expense-dialog__cat-fact--loading) :global(.expense-dialog__cat-fact-text) {
-    background: linear-gradient(90deg,
-        var(--color-bg-glass) 25%,
-        rgba(255, 255, 255, 0.08) 50%,
-        var(--color-bg-glass) 75%);
+  :global(.expense-dialog__cat-fact--loading)
+    :global(.expense-dialog__cat-fact-text) {
+    background: linear-gradient(
+      90deg,
+      var(--color-bg-glass) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      var(--color-bg-glass) 75%
+    );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: var(--radius-xs);

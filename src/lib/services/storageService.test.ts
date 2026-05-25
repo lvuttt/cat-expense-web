@@ -49,9 +49,11 @@ describe('LocalStorageService', () => {
   });
 
   it('should handle exceptions gracefully in save and clear', () => {
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new Error('Quota exceeded');
-    });
+    const setItemSpy = vi
+      .spyOn(Storage.prototype, 'setItem')
+      .mockImplementation(() => {
+        throw new Error('Quota exceeded');
+      });
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     storage.save({ name: 'Garfield' });

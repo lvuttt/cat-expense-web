@@ -17,41 +17,60 @@ describe('validationUtils', () => {
 
     it('should catch invalid item names', () => {
       // Empty name
-      expect(validateExpenseForm({ name: '', category: 'Food' as const, amount: 10 }).name).toBe(
-        'Item name is required.'
-      );
+      expect(
+        validateExpenseForm({ name: '', category: 'Food' as const, amount: 10 })
+          .name,
+      ).toBe('Item name is required.');
       // Spaces only
-      expect(validateExpenseForm({ name: '   ', category: 'Food' as const, amount: 10 }).name).toBe(
-        'Item name is required.'
-      );
+      expect(
+        validateExpenseForm({
+          name: '   ',
+          category: 'Food' as const,
+          amount: 10,
+        }).name,
+      ).toBe('Item name is required.');
       // Too long name
       const longName = 'a'.repeat(VALIDATION.NAME_MAX_LENGTH + 1);
-      expect(validateExpenseForm({ name: longName, category: 'Food' as const, amount: 10 }).name).toBe(
-        `Item name must be ${VALIDATION.NAME_MAX_LENGTH} characters or fewer.`
+      expect(
+        validateExpenseForm({
+          name: longName,
+          category: 'Food' as const,
+          amount: 10,
+        }).name,
+      ).toBe(
+        `Item name must be ${VALIDATION.NAME_MAX_LENGTH} characters or fewer.`,
       );
     });
 
     it('should catch missing category', () => {
       expect(validateExpenseForm({ name: 'Tuna', amount: 10 }).category).toBe(
-        'Please select a category.'
+        'Please select a category.',
       );
     });
 
     it('should catch invalid amounts', () => {
       // Missing amount
-      expect(validateExpenseForm({ name: 'Tuna', category: 'Food' as const }).amount).toBe(
-        'Amount is required.'
-      );
+      expect(
+        validateExpenseForm({ name: 'Tuna', category: 'Food' as const }).amount,
+      ).toBe('Amount is required.');
       // Less than minimum
       expect(
-        validateExpenseForm({ name: 'Tuna', category: 'Food' as const, amount: VALIDATION.AMOUNT_MIN - 0.01 })
-          .amount
+        validateExpenseForm({
+          name: 'Tuna',
+          category: 'Food' as const,
+          amount: VALIDATION.AMOUNT_MIN - 0.01,
+        }).amount,
       ).toBe(`Amount must be at least ${VALIDATION.AMOUNT_MIN}.`);
       // Greater than maximum
       expect(
-        validateExpenseForm({ name: 'Tuna', category: 'Food' as const, amount: VALIDATION.AMOUNT_MAX + 1 })
-          .amount
-      ).toBe(`Amount must be no more than ${VALIDATION.AMOUNT_MAX.toLocaleString()}.`);
+        validateExpenseForm({
+          name: 'Tuna',
+          category: 'Food' as const,
+          amount: VALIDATION.AMOUNT_MAX + 1,
+        }).amount,
+      ).toBe(
+        `Amount must be no more than ${VALIDATION.AMOUNT_MAX.toLocaleString()}.`,
+      );
     });
   });
 
@@ -64,7 +83,9 @@ describe('validationUtils', () => {
 
     it('should return false if all fields are empty', () => {
       expect(hasErrors({})).toBe(false);
-      expect(hasErrors({ name: undefined, category: undefined, amount: undefined })).toBe(false);
+      expect(
+        hasErrors({ name: undefined, category: undefined, amount: undefined }),
+      ).toBe(false);
       expect(hasErrors({ name: '', category: '', amount: '' })).toBe(false);
     });
   });

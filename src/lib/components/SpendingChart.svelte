@@ -13,7 +13,10 @@
 
   let categoryTotals = $derived(sumByCategory(expenses));
   let grandTotalCents = $derived(
-    [...categoryTotals.values()].reduce((sum, v) => sum + Math.round(v * 100), 0)
+    [...categoryTotals.values()].reduce(
+      (sum, v) => sum + Math.round(v * 100),
+      0,
+    ),
   );
   let grandTotal = $derived(grandTotalCents / 100);
 
@@ -21,10 +24,13 @@
     CATEGORIES.map((cat) => ({
       category: cat,
       total: categoryTotals.get(cat) ?? 0,
-      pct: grandTotal > 0 ? ((categoryTotals.get(cat) ?? 0) / grandTotal) * 100 : 0,
+      pct:
+        grandTotal > 0
+          ? ((categoryTotals.get(cat) ?? 0) / grandTotal) * 100
+          : 0,
       isTop: topCategories.has(cat),
       meta: CATEGORY_CONFIG[cat],
-    })).filter((r) => r.total > 0)
+    })).filter((r) => r.total > 0),
   );
 </script>
 
@@ -50,7 +56,10 @@
             </span>
             <span class="spending-chart__category-name">{meta.label}</span>
             {#if isTop}
-              <span class="spending-chart__top-badge" aria-label="Top spending category">
+              <span
+                class="spending-chart__top-badge"
+                aria-label="Top spending category"
+              >
                 👑
               </span>
             {/if}
@@ -176,15 +185,27 @@
 
   /* Category-specific fill colors */
   .spending-chart__fill--food {
-    background: linear-gradient(90deg, var(--color-category-food), rgba(249, 115, 22, 0.6));
+    background: linear-gradient(
+      90deg,
+      var(--color-category-food),
+      rgba(249, 115, 22, 0.6)
+    );
   }
 
   .spending-chart__fill--furniture {
-    background: linear-gradient(90deg, var(--color-category-furniture), rgba(59, 130, 246, 0.6));
+    background: linear-gradient(
+      90deg,
+      var(--color-category-furniture),
+      rgba(59, 130, 246, 0.6)
+    );
   }
 
   .spending-chart__fill--accessory {
-    background: linear-gradient(90deg, var(--color-category-accessory), rgba(168, 85, 247, 0.6));
+    background: linear-gradient(
+      90deg,
+      var(--color-category-accessory),
+      rgba(168, 85, 247, 0.6)
+    );
   }
 
   /* ---- Amount column ---- */

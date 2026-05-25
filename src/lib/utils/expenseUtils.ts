@@ -21,7 +21,9 @@ export function calculateTotal(expenses: readonly Expense[]): number {
  * Groups expenses by category and sums their amounts.
  * Returns a Map of category → total amount.
  */
-export function sumByCategory(expenses: readonly Expense[]): Map<Category, number> {
+export function sumByCategory(
+  expenses: readonly Expense[],
+): Map<Category, number> {
   const sums = new Map<Category, number>();
 
   for (const expense of expenses) {
@@ -38,7 +40,9 @@ export function sumByCategory(expenses: readonly Expense[]): Map<Category, numbe
  * Handles ties — multiple categories can be "top" if they share the max amount.
  * Returns an empty set if there are no expenses.
  */
-export function getTopSpendingCategories(expenses: readonly Expense[]): Set<Category> {
+export function getTopSpendingCategories(
+  expenses: readonly Expense[],
+): Set<Category> {
   if (expenses.length === 0) return new Set();
 
   const categorySums = sumByCategory(expenses);
@@ -70,7 +74,10 @@ export function isInTopCategory(
  * Falls back to a pseudorandom algorithm on non-secure contexts (e.g. mobile over HTTP).
  */
 export function generateId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+  if (
+    typeof crypto !== 'undefined' &&
+    typeof crypto.randomUUID === 'function'
+  ) {
     return crypto.randomUUID();
   }
   // Math.random-based RFC4122 v4 UUID generator fallback

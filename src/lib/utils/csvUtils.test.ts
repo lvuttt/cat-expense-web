@@ -1,12 +1,41 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Expense } from '../types';
-import { csvQuote, expensesToCsv, exportExpensesToCsv, downloadCsv } from './csvUtils';
+import {
+  csvQuote,
+  expensesToCsv,
+  exportExpensesToCsv,
+  downloadCsv,
+} from './csvUtils';
 
 const sampleExpenses: Expense[] = [
-  { id: '1', name: 'Premium Kibble', category: 'Food', amount: 25.5, createdAt: '2026-01-15T10:00:00Z' },
-  { id: '2', name: 'Cat Tree', category: 'Furniture', amount: 149.99, createdAt: '2026-02-20T14:00:00Z' },
-  { id: '3', name: 'Collar, with bell', category: 'Accessory', amount: 9.99, createdAt: '2026-03-10T09:00:00Z' },
-  { id: '4', name: 'He said "meow"', category: 'Food', amount: 5.0, createdAt: '2026-04-01T08:00:00Z' },
+  {
+    id: '1',
+    name: 'Premium Kibble',
+    category: 'Food',
+    amount: 25.5,
+    createdAt: '2026-01-15T10:00:00Z',
+  },
+  {
+    id: '2',
+    name: 'Cat Tree',
+    category: 'Furniture',
+    amount: 149.99,
+    createdAt: '2026-02-20T14:00:00Z',
+  },
+  {
+    id: '3',
+    name: 'Collar, with bell',
+    category: 'Accessory',
+    amount: 9.99,
+    createdAt: '2026-03-10T09:00:00Z',
+  },
+  {
+    id: '4',
+    name: 'He said "meow"',
+    category: 'Food',
+    amount: 5.0,
+    createdAt: '2026-04-01T08:00:00Z',
+  },
 ];
 
 describe('csvUtils', () => {
@@ -65,8 +94,12 @@ describe('csvUtils', () => {
     let clickSpy: ReturnType<typeof vi.fn>;
 
     beforeEach(() => {
-      createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:test-url');
-      revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+      createObjectURLSpy = vi
+        .spyOn(URL, 'createObjectURL')
+        .mockReturnValue('blob:test-url');
+      revokeObjectURLSpy = vi
+        .spyOn(URL, 'revokeObjectURL')
+        .mockImplementation(() => {});
       clickSpy = vi.fn();
 
       const mockAnchor = {
@@ -76,8 +109,12 @@ describe('csvUtils', () => {
       } as unknown as HTMLAnchorElement;
 
       vi.spyOn(document, 'createElement').mockReturnValue(mockAnchor);
-      appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation(() => mockAnchor);
-      removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation(() => mockAnchor);
+      appendChildSpy = vi
+        .spyOn(document.body, 'appendChild')
+        .mockImplementation(() => mockAnchor);
+      removeChildSpy = vi
+        .spyOn(document.body, 'removeChild')
+        .mockImplementation(() => mockAnchor);
     });
 
     afterEach(() => {
@@ -104,8 +141,12 @@ describe('csvUtils', () => {
         click: vi.fn(),
       } as unknown as HTMLAnchorElement;
       vi.spyOn(document, 'createElement').mockReturnValue(mockAnchor);
-      vi.spyOn(document.body, 'appendChild').mockImplementation(() => mockAnchor);
-      vi.spyOn(document.body, 'removeChild').mockImplementation(() => mockAnchor);
+      vi.spyOn(document.body, 'appendChild').mockImplementation(
+        () => mockAnchor,
+      );
+      vi.spyOn(document.body, 'removeChild').mockImplementation(
+        () => mockAnchor,
+      );
     });
 
     afterEach(() => {
@@ -128,7 +169,9 @@ describe('csvUtils', () => {
       exportExpensesToCsv(sampleExpenses);
 
       // The filename should match "cat-expenses-YYYY-MM-DD.csv"
-      const call = setAttributeSpy.mock.calls.find(([attr]) => attr === 'download');
+      const call = setAttributeSpy.mock.calls.find(
+        ([attr]) => attr === 'download',
+      );
       expect(call).toBeDefined();
       expect(call![1]).toMatch(/^cat-expenses-\d{4}-\d{2}-\d{2}\.csv$/);
     });

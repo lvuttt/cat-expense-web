@@ -40,9 +40,7 @@
     style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 32px; text-align: center; color: var(--color-text-primary);"
   >
     <span style="font-size: 4rem; margin-bottom: 16px;">😿</span>
-    <h1 style="font-size: 1.5rem; margin-bottom: 8px;">
-      Something went wrong
-    </h1>
+    <h1 style="font-size: 1.5rem; margin-bottom: 8px;">Something went wrong</h1>
     <p
       style="color: var(--color-text-secondary); margin-bottom: 24px; max-width: 400px;"
     >

@@ -2,9 +2,7 @@
 </script>
 
 <header class="header" id="app-header">
-  <div class="header__logo" aria-hidden="true">
-    🐱
-  </div>
+  <div class="header__logo" aria-hidden="true">🐱</div>
   <h1 class="header__title">Cat Expense</h1>
   <p class="header__subtitle">
     Track your feline friend's expenses with purr-fection
@@ -18,7 +16,8 @@
 
   .header {
     text-align: center;
-    padding: var(--header-padding-top) var(--space-md) var(--header-padding-bottom);
+    padding: var(--header-padding-top) var(--space-md)
+      var(--header-padding-bottom);
     animation: fadeIn var(--transition-slow) ease;
   }
 

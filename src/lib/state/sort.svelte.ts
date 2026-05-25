@@ -9,14 +9,19 @@ export const createSort = (defaultField: SortField = 'name') => {
 
   function handleSort(field: SortField): void {
     if (sortConfig.field === field) {
-      sortConfig = { field, direction: toggleSortDirection(sortConfig.direction) };
+      sortConfig = {
+        field,
+        direction: toggleSortDirection(sortConfig.direction),
+      };
     } else {
       sortConfig = { field, direction: 'asc' };
     }
   }
 
   return {
-    get sortConfig() { return sortConfig; },
+    get sortConfig() {
+      return sortConfig;
+    },
     handleSort,
   };
-}
+};

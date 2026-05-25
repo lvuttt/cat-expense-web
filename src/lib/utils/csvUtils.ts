@@ -17,7 +17,8 @@ import { formatCurrency, formatDate } from './formatUtils';
  * Applied conditionally — only when the field value requires quoting.
  */
 export function csvQuote(value: string): string {
-  const needsQuoting = value.includes('"') || value.includes(',') || value.includes('\n');
+  const needsQuoting =
+    value.includes('"') || value.includes(',') || value.includes('\n');
   if (!needsQuoting) return value;
   return `"${value.replace(/"/g, '""')}"`;
 }

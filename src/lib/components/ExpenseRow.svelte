@@ -44,10 +44,12 @@
       isSelected ? 'expense-row--selected' : '',
     ]
       .filter(Boolean)
-      .join(' ')
+      .join(' '),
   );
 
-  let badgeClass = $derived(`expense-row__category-badge expense-row__category-badge--${categoryMeta.cssClass}`);
+  let badgeClass = $derived(
+    `expense-row__category-badge expense-row__category-badge--${categoryMeta.cssClass}`,
+  );
 
   function handleRowClick() {
     onEdit(expense);
@@ -65,8 +67,8 @@
 >
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div 
-    class="expense-row__cell expense-row__cell--checkbox" 
+  <div
+    class="expense-row__cell expense-row__cell--checkbox"
     role="cell"
     onclick={(e) => e.stopPropagation()}
   >
@@ -88,7 +90,9 @@
     onmouseenter={handleMouseEnter}
     onmouseleave={handleMouseLeave}
   >
-    <span bind:this={nameRef} class="expense-row__name-text">{expense.name}</span>
+    <span bind:this={nameRef} class="expense-row__name-text"
+      >{expense.name}</span
+    >
   </div>
 
   <div class="expense-row__cell expense-row__cell--category" role="cell">
@@ -104,8 +108,8 @@
 
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div 
-    class="expense-row__cell expense-row__cell--actions" 
+  <div
+    class="expense-row__cell expense-row__cell--actions"
     role="cell"
     onclick={(e) => e.stopPropagation()}
   >
@@ -171,7 +175,9 @@
 
   .expense-row {
     display: grid;
-    grid-template-columns: var(--col-checkbox) 1fr var(--col-category) var(--col-amount) var(--col-actions);
+    grid-template-columns:
+      var(--col-checkbox) 1fr var(--col-category) var(--col-amount)
+      var(--col-actions);
     column-gap: var(--space-md);
     align-items: center;
     padding: var(--space-sm) var(--space-md);
@@ -259,7 +265,9 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .expense-row__checkbox:checked {

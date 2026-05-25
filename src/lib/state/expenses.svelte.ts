@@ -35,7 +35,7 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
             category: formData.category,
             amount: Number(formData.amount.toFixed(2)),
           }
-        : expense
+        : expense,
     );
   }
 
@@ -50,13 +50,21 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
   }
 
   return {
-    get expenses() { return expenses; },
-    set expenses(val) { expenses = val; },
-    get topCategories() { return topCategories; },
-    get totalAmount() { return totalAmount; },
+    get expenses() {
+      return expenses;
+    },
+    set expenses(val) {
+      expenses = val;
+    },
+    get topCategories() {
+      return topCategories;
+    },
+    get totalAmount() {
+      return totalAmount;
+    },
     addExpense,
     updateExpense,
     deleteExpenses,
     duplicateExpense,
   };
-}
+};

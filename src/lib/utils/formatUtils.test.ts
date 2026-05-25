@@ -43,8 +43,10 @@ describe('formatUtils', () => {
       // Let's check that it returns a non-empty string and doesn't crash.
       expect(result).toBeTruthy();
       expect(typeof result).toBe('string');
-      
-      const parsedYear = new Date(dateStr).toLocaleDateString(undefined, { year: 'numeric' });
+
+      const parsedYear = new Date(dateStr).toLocaleDateString(undefined, {
+        year: 'numeric',
+      });
       expect(result).toContain(parsedYear);
     });
   });

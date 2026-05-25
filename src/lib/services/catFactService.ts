@@ -10,7 +10,11 @@
  * previously-seen fact when the network is unavailable.
  */
 
-import { CAT_FACT_API_URL, CAT_FACT_CACHE_KEY, CAT_FACT_CACHE_MAX } from '../constants';
+import {
+  CAT_FACT_API_URL,
+  CAT_FACT_CACHE_KEY,
+  CAT_FACT_CACHE_MAX,
+} from '../constants';
 
 /** Shape of the response from catfact.ninja/fact */
 interface CatFactApiResponse {

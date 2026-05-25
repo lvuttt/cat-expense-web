@@ -84,14 +84,12 @@
   const submitLabel = $derived(isEditMode ? 'Update' : 'Submit');
 </script>
 
-<form
-  class="expense-dialog__form"
-  onsubmit={handleFormSubmit}
-  novalidate
->
+<form class="expense-dialog__form" onsubmit={handleFormSubmit} novalidate>
   <!-- Item Name -->
   <div
-    class="expense-dialog__field {errors.name ? 'expense-dialog__field--error' : ''}"
+    class="expense-dialog__field {errors.name
+      ? 'expense-dialog__field--error'
+      : ''}"
   >
     <label
       class="expense-dialog__label expense-dialog__label--required"
@@ -111,7 +109,11 @@
       autocomplete="off"
     />
     {#if errors.name}
-      <p class="expense-dialog__error-message" id="expense-name-error" role="alert">
+      <p
+        class="expense-dialog__error-message"
+        id="expense-name-error"
+        role="alert"
+      >
         {errors.name}
       </p>
     {/if}
@@ -119,7 +121,9 @@
 
   <!-- Category -->
   <div
-    class="expense-dialog__field {errors.category ? 'expense-dialog__field--error' : ''}"
+    class="expense-dialog__field {errors.category
+      ? 'expense-dialog__field--error'
+      : ''}"
   >
     <label
       class="expense-dialog__label expense-dialog__label--required"
@@ -132,16 +136,13 @@
       id="expense-category"
       bind:value={category}
       aria-invalid={!!errors.category}
-      aria-describedby={
-        errors.category ? 'expense-category-error' : undefined
-      }
+      aria-describedby={errors.category ? 'expense-category-error' : undefined}
     >
-      <option value="" disabled>
-        Select a category
-      </option>
+      <option value="" disabled> Select a category </option>
       {#each CATEGORIES as cat (cat)}
         <option value={cat}>
-          {CATEGORY_CONFIG[cat].emoji} {CATEGORY_CONFIG[cat].label}
+          {CATEGORY_CONFIG[cat].emoji}
+          {CATEGORY_CONFIG[cat].label}
         </option>
       {/each}
     </select>
@@ -158,7 +159,9 @@
 
   <!-- Amount -->
   <div
-    class="expense-dialog__field {errors.amount ? 'expense-dialog__field--error' : ''}"
+    class="expense-dialog__field {errors.amount
+      ? 'expense-dialog__field--error'
+      : ''}"
   >
     <label
       class="expense-dialog__label expense-dialog__label--required"
@@ -174,9 +177,7 @@
       bind:value={amount}
       placeholder="0.00"
       aria-invalid={!!errors.amount}
-      aria-describedby={
-        errors.amount ? 'expense-amount-error' : undefined
-      }
+      aria-describedby={errors.amount ? 'expense-amount-error' : undefined}
     />
     {#if errors.amount}
       <p

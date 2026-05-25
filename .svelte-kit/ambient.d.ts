@@ -74,6 +74,7 @@ declare module '$env/static/private' {
 	export const GOFLAGS: string;
 	export const npm_lifecycle_event: string;
 	export const npm_package_devDependencies_jsdom: string;
+	export const npm_package_resolutions_vite: string;
 	export const ASDF_CONFIG_FILE: string;
 	export const npm_package_devDependencies__sveltejs_vite_plugin_svelte: string;
 	export const npm_package_name: string;
@@ -119,7 +120,6 @@ declare module '$env/static/private' {
 	export const npm_config_init_version: string;
 	export const npm_config_ignore_optional: string;
 	export const __MISE_ZSH_PRECMD_RUN: string;
-	export const GH_TOKEN: string;
 	export const npm_node_execpath: string;
 	export const npm_config_version_tag_prefix: string;
 	export const NODE_ENV: string;
@@ -202,6 +202,7 @@ declare module '$env/dynamic/private' {
 		GOFLAGS: string;
 		npm_lifecycle_event: string;
 		npm_package_devDependencies_jsdom: string;
+		npm_package_resolutions_vite: string;
 		ASDF_CONFIG_FILE: string;
 		npm_package_devDependencies__sveltejs_vite_plugin_svelte: string;
 		npm_package_name: string;
@@ -247,7 +248,6 @@ declare module '$env/dynamic/private' {
 		npm_config_init_version: string;
 		npm_config_ignore_optional: string;
 		__MISE_ZSH_PRECMD_RUN: string;
-		GH_TOKEN: string;
 		npm_node_execpath: string;
 		npm_config_version_tag_prefix: string;
 		NODE_ENV: string;

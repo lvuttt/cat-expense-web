@@ -3,10 +3,10 @@ export interface VisibleItem<T> {
   readonly originalIndex: number;
 }
 
-export const createVirtualList = <T,>(
+export const createVirtualList = <T>(
   getItems: () => readonly T[],
   rowHeight: number,
-  buffer: number = 5
+  buffer: number = 5,
 ) => {
   let container = $state<HTMLDivElement | null>(null);
   let scrollTop = $state(0);
@@ -51,7 +51,7 @@ export const createVirtualList = <T,>(
     const startIndex = Math.max(0, Math.floor(scrollTop / rowHeight) - buffer);
     const endIndex = Math.min(
       items.length,
-      Math.ceil((scrollTop + clientHeight) / rowHeight) + buffer
+      Math.ceil((scrollTop + clientHeight) / rowHeight) + buffer,
     );
 
     return items.slice(startIndex, endIndex).map((item, index) => ({
@@ -63,9 +63,17 @@ export const createVirtualList = <T,>(
   const totalHeight = $derived.by(() => getItems().length * rowHeight);
 
   return {
-    get container() { return container; },
-    set container(val) { container = val; },
-    get visibleItems() { return visibleItems; },
-    get totalHeight() { return totalHeight; },
+    get container() {
+      return container;
+    },
+    set container(val) {
+      container = val;
+    },
+    get visibleItems() {
+      return visibleItems;
+    },
+    get totalHeight() {
+      return totalHeight;
+    },
   };
-}
+};

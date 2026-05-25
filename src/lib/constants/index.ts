@@ -20,8 +20,6 @@ export const CAT_FACT_CACHE_KEY = 'cat-fact-cache';
 /** Maximum number of cat facts to store in the offline cache. */
 export const CAT_FACT_CACHE_MAX = 10;
 
-
-
 /** Form validation constraints. */
 export const VALIDATION = {
   NAME_MIN_LENGTH: 1,

@@ -14,7 +14,7 @@
     onExportClick,
     selectedCount,
     isDeleteDisabled,
-    isExportDisabled
+    isExportDisabled,
   }: Props = $props();
 
   let deleteButtonClasses = $derived(
@@ -24,7 +24,7 @@
       isDeleteDisabled ? 'action-bar__button--disabled' : '',
     ]
       .filter(Boolean)
-      .join(' ')
+      .join(' '),
   );
 
   let exportButtonClasses = $derived(
@@ -34,11 +34,16 @@
       isExportDisabled ? 'action-bar__button--disabled' : '',
     ]
       .filter(Boolean)
-      .join(' ')
+      .join(' '),
   );
 </script>
 
-<div class="action-bar" id="action-bar" role="toolbar" aria-label="Expense actions">
+<div
+  class="action-bar"
+  id="action-bar"
+  role="toolbar"
+  aria-label="Expense actions"
+>
   <button
     id="add-expense-button"
     class="action-bar__button action-bar__button--primary"

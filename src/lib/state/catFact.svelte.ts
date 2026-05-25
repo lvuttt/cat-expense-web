@@ -7,7 +7,7 @@ const getOfflineFact = (): string => {
   if (cached.length === 0) return FALLBACK_CAT_FACT;
   const idx = Math.floor(Math.random() * cached.length);
   return cached[idx];
-}
+};
 
 export const createCatFact = () => {
   let fact = $state<string>(FALLBACK_CAT_FACT);
@@ -36,7 +36,10 @@ export const createCatFact = () => {
 
         const message =
           err instanceof Error ? err.message : 'Failed to fetch cat fact';
-        console.warn('[createCatFact] API error, using offline fallback:', message);
+        console.warn(
+          '[createCatFact] API error, using offline fallback:',
+          message,
+        );
         fact = getOfflineFact();
         error = message;
         isLoading = false;
@@ -48,9 +51,15 @@ export const createCatFact = () => {
   });
 
   return {
-    get fact() { return fact; },
-    get isLoading() { return isLoading; },
-    get error() { return error; },
+    get fact() {
+      return fact;
+    },
+    get isLoading() {
+      return isLoading;
+    },
+    get error() {
+      return error;
+    },
     refetch,
   };
-}
+};

@@ -41,7 +41,11 @@
   }> = [
     { field: 'name', label: 'Item Name', className: '' },
     { field: 'category', label: 'Category', className: '' },
-    { field: 'amount', label: 'Amount', className: 'expense-table__header-cell--amount' },
+    {
+      field: 'amount',
+      label: 'Amount',
+      className: 'expense-table__header-cell--amount',
+    },
   ];
 
   let hasExpenses = $derived(expenses.length > 0);
@@ -80,7 +84,9 @@
         type="checkbox"
         checked={isAllSelected}
         onchange={onToggleAll}
-        aria-label={isAllSelected ? 'Deselect all expenses' : 'Select all expenses'}
+        aria-label={isAllSelected
+          ? 'Deselect all expenses'
+          : 'Select all expenses'}
         id="select-all-checkbox"
         disabled={!hasExpenses}
       />
@@ -89,22 +95,24 @@
     {#each SORTABLE_COLUMNS as { field, label, className } (field)}
       {@const isSorted = sortConfig.field === field}
       <button
-        class="expense-table__header-cell expense-table__header-cell--sortable {isSorted ? 'expense-table__header-cell--sorted' : ''} {className}"
+        class="expense-table__header-cell expense-table__header-cell--sortable {isSorted
+          ? 'expense-table__header-cell--sorted'
+          : ''} {className}"
         type="button"
         role="columnheader"
-        aria-sort={
-          isSorted
-            ? sortConfig.direction === 'asc'
-              ? 'ascending'
-              : 'descending'
-            : 'none'
-        }
+        aria-sort={isSorted
+          ? sortConfig.direction === 'asc'
+            ? 'ascending'
+            : 'descending'
+          : 'none'}
         onclick={() => onSort(field)}
       >
         {label}
         {#if isSorted}
           <span
-            class="expense-table__sort-icon {sortConfig.direction === 'desc' ? 'expense-table__sort-icon--desc' : ''}"
+            class="expense-table__sort-icon {sortConfig.direction === 'desc'
+              ? 'expense-table__sort-icon--desc'
+              : ''}"
             aria-hidden="true"
           >
             ▲
@@ -122,14 +130,12 @@
   </div>
 
   <!-- Table Body -->
-  <div
-    class="expense-table__body"
-    role="rowgroup"
-    bind:this={containerEl}
-  >
+  <div class="expense-table__body" role="rowgroup" bind:this={containerEl}>
     <div
       class="expense-table__inner"
-      style="position: relative; height: {hasExpenses ? `${virtualList.totalHeight}px` : 'auto'};"
+      style="position: relative; height: {hasExpenses
+        ? `${virtualList.totalHeight}px`
+        : 'auto'};"
     >
       {#if hasExpenses}
         {#each virtualList.visibleItems as { item: expense, originalIndex } (expense.id)}
@@ -149,9 +155,7 @@
         {/each}
       {:else}
         <div class="expense-table__empty" role="row">
-          <span class="expense-table__empty-icon" aria-hidden="true">
-            😺
-          </span>
+          <span class="expense-table__empty-icon" aria-hidden="true"> 😺 </span>
           <p class="expense-table__empty-title">No expenses yet</p>
           <p class="expense-table__empty-text">
             Click "Add Expense" to start tracking your cat's spending!
@@ -182,7 +186,9 @@
   /* Header row */
   .expense-table__header {
     display: grid;
-    grid-template-columns: var(--col-checkbox) 1fr var(--col-category) var(--col-amount) var(--col-actions);
+    grid-template-columns:
+      var(--col-checkbox) 1fr var(--col-category) var(--col-amount)
+      var(--col-actions);
     column-gap: var(--space-md);
     align-items: center;
     padding: var(--space-sm) var(--space-md);
@@ -228,7 +234,9 @@
     align-items: center;
     justify-content: flex-start;
     cursor: pointer;
-    transition: color var(--transition-fast), background var(--transition-fast);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast);
     border-radius: var(--radius-xs);
     padding: var(--space-2xs) var(--space-xs);
     margin: calc(-1 * var(--space-2xs)) calc(-1 * var(--space-xs));
@@ -268,7 +276,9 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .expense-table__checkbox:checked {

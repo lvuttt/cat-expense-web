@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [svelte({ hot: !process.env.VITEST })],
   resolve: {
     alias: {
-      '$lib': path.resolve(__dirname, './src/lib'),
+      $lib: path.resolve(__dirname, './src/lib'),
       '$app/paths': path.resolve(__dirname, './src/lib/mocks/appPaths.ts'),
     },
   },

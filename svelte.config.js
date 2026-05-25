@@ -10,12 +10,14 @@ const config = {
       assets: 'build',
       fallback: '404.html',
       precompress: false,
-      strict: true
+      strict: true,
     }),
     paths: {
-      base: process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : ''
-    }
-  }
+      base: process.env.GITHUB_REPOSITORY
+        ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}`
+        : '',
+    },
+  },
 };
 
 export default config;

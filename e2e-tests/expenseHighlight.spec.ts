@@ -11,7 +11,12 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
   });
 
   // Helper: Add an expense
-  const addExpense = async (page: Page, name: string, category: string, amount: string) => {
+  const addExpense = async (
+    page: Page,
+    name: string,
+    category: string,
+    amount: string,
+  ) => {
     await page.click('id=add-expense-button');
     const nameInput = page.locator('id=expense-name');
     await expect(nameInput).toBeFocused();
@@ -22,7 +27,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(page.locator('id=expense-dialog')).toBeHidden();
   };
 
-  test('should highlight the highest spending category, handle ties, and update dynamically', async ({ page }) => {
+  test('should highlight the highest spending category, handle ties, and update dynamically', async ({
+    page,
+  }) => {
     await expect(page.locator('.expense-table__empty')).toBeVisible();
 
     // 1. Add first expense: Food ($10.00)
@@ -38,7 +45,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
 
     // 3. Add third expense: Furniture ($25.00)
     await addExpense(page, 'Scratching Post', '🛋️ Furniture', '25.00');
-    const postRow = page.locator('.expense-row', { hasText: 'Scratching Post' });
+    const postRow = page.locator('.expense-row', {
+      hasText: 'Scratching Post',
+    });
     await expect(postRow).toHaveClass(/expense-row--highlighted/);
     await expect(tunaRow).not.toHaveClass(/expense-row--highlighted/);
     await expect(laserRow).not.toHaveClass(/expense-row--highlighted/);
@@ -52,7 +61,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(laserRow).not.toHaveClass(/expense-row--highlighted/);
   });
 
-  test('should handle equal spending on 2 or 3 categories and verify highlighting', async ({ page }) => {
+  test('should handle equal spending on 2 or 3 categories and verify highlighting', async ({
+    page,
+  }) => {
     // 1. Add first expense: Food ($15.00)
     await addExpense(page, 'Cat Food', '🍕 Food', '15.00');
     const foodRow = page.locator('.expense-row', { hasText: 'Cat Food' });
@@ -72,16 +83,24 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(furnitureRow).toHaveClass(/expense-row--highlighted/);
   });
 
-  test('should show inline validation errors for invalid fields and clear them on correction', async ({ page }) => {
+  test('should show inline validation errors for invalid fields and clear them on correction', async ({
+    page,
+  }) => {
     await page.click('id=add-expense-button');
 
     // Submit blank form
     await page.click('id=dialog-submit-button');
 
     // Verify error messages
-    await expect(page.locator('id=expense-name-error')).toHaveText(/Item name is required/);
-    await expect(page.locator('id=expense-category-error')).toHaveText(/Please select a category/);
-    await expect(page.locator('id=expense-amount-error')).toHaveText(/Amount is required/);
+    await expect(page.locator('id=expense-name-error')).toHaveText(
+      /Item name is required/,
+    );
+    await expect(page.locator('id=expense-category-error')).toHaveText(
+      /Please select a category/,
+    );
+    await expect(page.locator('id=expense-amount-error')).toHaveText(
+      /Amount is required/,
+    );
 
     // Correct Name field
     await page.fill('id=expense-name', 'Treats');
@@ -93,7 +112,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
 
     // Fill invalid amount
     await page.fill('id=expense-amount', '0');
-    await expect(page.locator('id=expense-amount-error')).toHaveText(/Amount must be at least 0.01/);
+    await expect(page.locator('id=expense-amount-error')).toHaveText(
+      /Amount must be at least 0.01/,
+    );
 
     // Fill valid amount
     await page.fill('id=expense-amount', '10.50');
@@ -108,7 +129,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(row).toBeVisible();
   });
 
-  test('should support editing and updating existing expenses', async ({ page }) => {
+  test('should support editing and updating existing expenses', async ({
+    page,
+  }) => {
     await addExpense(page, 'Cat Kibble', '🍕 Food', '15.00');
     const row = page.locator('.expense-row', { hasText: 'Cat Kibble' });
     await expect(row).toBeVisible();
@@ -129,10 +152,16 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(page.locator('id=expense-dialog')).toBeHidden();
 
     // Verify updated values in row
-    const updatedRow = page.locator('.expense-row', { hasText: 'Fancy Kibble' });
+    const updatedRow = page.locator('.expense-row', {
+      hasText: 'Fancy Kibble',
+    });
     await expect(updatedRow).toBeVisible();
-    await expect(updatedRow.locator('.expense-row__cell--amount')).toHaveText('$25.50');
-    await expect(page.locator('.expense-row', { hasText: 'Cat Kibble' })).toBeHidden();
+    await expect(updatedRow.locator('.expense-row__cell--amount')).toHaveText(
+      '$25.50',
+    );
+    await expect(
+      page.locator('.expense-row', { hasText: 'Cat Kibble' }),
+    ).toBeHidden();
   });
 
   test('should support duplicating expenses', async ({ page }) => {
@@ -146,12 +175,17 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     // Verify clone exists
     const rows = page.locator('.expense-row', { hasText: 'Play Feather' });
     await expect(rows).toHaveCount(2);
-    await expect(rows.nth(0).locator('.expense-row__cell--amount')).toHaveText('$12.00');
-    await expect(rows.nth(1).locator('.expense-row__cell--amount')).toHaveText('$12.00');
-
+    await expect(rows.nth(0).locator('.expense-row__cell--amount')).toHaveText(
+      '$12.00',
+    );
+    await expect(rows.nth(1).locator('.expense-row__cell--amount')).toHaveText(
+      '$12.00',
+    );
   });
 
-  test('should support checking/unchecking all and deleting multiple items', async ({ page }) => {
+  test('should support checking/unchecking all and deleting multiple items', async ({
+    page,
+  }) => {
     await addExpense(page, 'Kibble', '🍕 Food', '10.00');
     await addExpense(page, 'Tower', '🛋️ Furniture', '40.00');
     await addExpense(page, 'Collar', '✨ Accessory', '5.00');
@@ -170,7 +204,15 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(deleteButton.locator('.action-bar__badge')).toHaveText('3');
 
     // Uncheck one item manually
-    await page.locator('id=select-' + (await page.locator('.expense-row').nth(0).getAttribute('data-expense-id'))).click();
+    await page
+      .locator(
+        'id=select-' +
+          (await page
+            .locator('.expense-row')
+            .nth(0)
+            .getAttribute('data-expense-id')),
+      )
+      .click();
     await expect(selectAllCheckbox).not.toBeChecked();
     await expect(deleteButton.locator('.action-bar__badge')).toHaveText('2');
 
@@ -181,7 +223,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(page.locator('.expense-row')).toHaveCount(1);
   });
 
-  test('should support sorting by item name, category, and amount', async ({ page }) => {
+  test('should support sorting by item name, category, and amount', async ({
+    page,
+  }) => {
     await addExpense(page, 'Cat Collar', '✨ Accessory', '20.00');
     await addExpense(page, 'Scratching Post', '🛋️ Furniture', '50.00');
     await addExpense(page, 'Tuna Can', '🍕 Food', '5.00');
@@ -215,19 +259,25 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     expect(names).toEqual(['Scratching Post', 'Cat Collar', 'Tuna Can']);
   });
 
-  test('should auto-focus the name field on opening the dialog', async ({ page }) => {
+  test('should auto-focus the name field on opening the dialog', async ({
+    page,
+  }) => {
     await page.click('id=add-expense-button');
     const nameInput = page.locator('id=expense-name');
     await expect(nameInput).toBeFocused();
   });
 
-  test('should handle dialog cancellation for both add and edit modes', async ({ page }) => {
+  test('should handle dialog cancellation for both add and edit modes', async ({
+    page,
+  }) => {
     // Add mode cancellation
     await page.click('id=add-expense-button');
     await page.fill('id=expense-name', 'Cancelled Item');
     await page.click('id=dialog-close-button');
     await expect(page.locator('id=expense-dialog')).toBeHidden();
-    await expect(page.locator('.expense-row', { hasText: 'Cancelled Item' })).toBeHidden();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Cancelled Item' }),
+    ).toBeHidden();
 
     // Edit mode cancellation
     await addExpense(page, 'Original Item', '🍕 Food', '12.00');
@@ -236,18 +286,26 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await page.fill('id=expense-name', 'Edited Item');
     await page.click('id=dialog-close-button');
     await expect(page.locator('id=expense-dialog')).toBeHidden();
-    await expect(page.locator('.expense-row', { hasText: 'Original Item' })).toBeVisible();
-    await expect(page.locator('.expense-row', { hasText: 'Edited Item' })).toBeHidden();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Original Item' }),
+    ).toBeVisible();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Edited Item' }),
+    ).toBeHidden();
   });
 
-  test('should display fetched cat facts inside the dialog', async ({ page }) => {
+  test('should display fetched cat facts inside the dialog', async ({
+    page,
+  }) => {
     await page.click('id=add-expense-button');
     const factText = page.locator('.expense-dialog__cat-fact-text');
     await expect(factText).toBeVisible();
     await expect(factText).not.toBeEmpty();
   });
 
-  test('should shift highlights back to remaining top category when top category item is deleted', async ({ page }) => {
+  test('should shift highlights back to remaining top category when top category item is deleted', async ({
+    page,
+  }) => {
     await addExpense(page, 'Tuna Cans', '🍕 Food', '10.00');
     await addExpense(page, 'Laser Toy', '✨ Accessory', '15.00');
 
@@ -258,28 +316,40 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(tunaRow).not.toHaveClass(/expense-row--highlighted/);
 
     // Delete Accessory item
-    await page.locator('id=select-' + (await laserRow.getAttribute('data-expense-id'))).click();
+    await page
+      .locator('id=select-' + (await laserRow.getAttribute('data-expense-id')))
+      .click();
     await page.click('id=delete-expense-button');
 
     // Highlighting shifts to Food
     await expect(tunaRow).toHaveClass(/expense-row--highlighted/);
   });
 
-  test('should support multiple duplications with identical names', async ({ page }) => {
+  test('should support multiple duplications with identical names', async ({
+    page,
+  }) => {
     await addExpense(page, 'Toy', '✨ Accessory', '5.00');
     const rows = page.locator('.expense-row', { hasText: 'Toy' });
     await expect(rows).toHaveCount(1);
 
     // Duplicate once
-    await rows.first().locator('.expense-row__action-button--duplicate').click();
+    await rows
+      .first()
+      .locator('.expense-row__action-button--duplicate')
+      .click();
     await expect(rows).toHaveCount(2);
 
     // Duplicate again
-    await rows.first().locator('.expense-row__action-button--duplicate').click();
+    await rows
+      .first()
+      .locator('.expense-row__action-button--duplicate')
+      .click();
     await expect(rows).toHaveCount(3);
   });
 
-  test('should support checking and unchecking all items via header checkbox', async ({ page }) => {
+  test('should support checking and unchecking all items via header checkbox', async ({
+    page,
+  }) => {
     await addExpense(page, 'A', '🍕 Food', '5.00');
     await addExpense(page, 'B', '🍕 Food', '5.00');
 
@@ -297,15 +367,23 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(deleteButton).toBeDisabled();
   });
 
-  test('should support partial/indeterminate selection states when checking items manually', async ({ page }) => {
+  test('should support partial/indeterminate selection states when checking items manually', async ({
+    page,
+  }) => {
     await addExpense(page, 'Item A', '🍕 Food', '5.00');
-    await expect(page.locator('.expense-row', { hasText: 'Item A' })).toBeVisible();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Item A' }),
+    ).toBeVisible();
 
     await addExpense(page, 'Item B', '🛋️ Furniture', '10.00');
-    await expect(page.locator('.expense-row', { hasText: 'Item B' })).toBeVisible();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Item B' }),
+    ).toBeVisible();
 
     await addExpense(page, 'Item C', '✨ Accessory', '15.00');
-    await expect(page.locator('.expense-row', { hasText: 'Item C' })).toBeVisible();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Item C' }),
+    ).toBeVisible();
 
     const selectAllCheckbox = page.locator('id=select-all-checkbox');
 
@@ -342,7 +420,9 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(selectAllCheckbox).toHaveJSProperty('indeterminate', true);
   });
 
-  test('should validate name max length, zero amount, and huge amount boundary values', async ({ page }) => {
+  test('should validate name max length, zero amount, and huge amount boundary values', async ({
+    page,
+  }) => {
     await page.click('id=add-expense-button');
 
     // 1. Name max length validation (>100 chars)
@@ -351,18 +431,24 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await page.selectOption('id=expense-category', { label: '🍕 Food' });
     await page.fill('id=expense-amount', '10');
     await page.click('id=dialog-submit-button');
-    await expect(page.locator('id=expense-name-error')).toHaveText(/Item name must be 100 characters or fewer/);
+    await expect(page.locator('id=expense-name-error')).toHaveText(
+      /Item name must be 100 characters or fewer/,
+    );
 
     // 2. Zero amount validation
     await page.fill('id=expense-name', 'Valid Name');
     await page.fill('id=expense-amount', '0.00');
     await page.click('id=dialog-submit-button');
-    await expect(page.locator('id=expense-amount-error')).toHaveText(/Amount must be at least 0.01/);
+    await expect(page.locator('id=expense-amount-error')).toHaveText(
+      /Amount must be at least 0.01/,
+    );
 
     // 3. Huge amount validation
     await page.fill('id=expense-amount', '1000000.00');
     await page.click('id=dialog-submit-button');
-    await expect(page.locator('id=expense-amount-error')).toHaveText(/Amount must be no more than 999,999.99/);
+    await expect(page.locator('id=expense-amount-error')).toHaveText(
+      /Amount must be no more than 999,999.99/,
+    );
   });
 
   test('should show fallback cat facts when offline', async ({ page }) => {
@@ -374,19 +460,27 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     await expect(factText).toHaveText(/sleep for about 13–16 hours/);
   });
 
-  test('should persist expenses on reload and recover gracefully from corrupted localStorage data', async ({ page }) => {
+  test('should persist expenses on reload and recover gracefully from corrupted localStorage data', async ({
+    page,
+  }) => {
     await addExpense(page, 'Kibble', '🍕 Food', '10.00');
     await page.reload();
-    await expect(page.locator('.expense-row', { hasText: 'Kibble' })).toBeVisible();
+    await expect(
+      page.locator('.expense-row', { hasText: 'Kibble' }),
+    ).toBeVisible();
 
-    await page.evaluate(() => localStorage.setItem('cat-expense-data', 'corrupted-non-json-string'));
+    await page.evaluate(() =>
+      localStorage.setItem('cat-expense-data', 'corrupted-non-json-string'),
+    );
     await page.reload();
 
     await expect(page.locator('.expense-table__empty')).toBeVisible();
     await expect(page.locator('.expense-row')).toHaveCount(0);
   });
 
-  test('should handle rapid dialog toggling without exceptions', async ({ page }) => {
+  test('should handle rapid dialog toggling without exceptions', async ({
+    page,
+  }) => {
     const dialog = page.locator('id=expense-dialog');
 
     for (let i = 0; i < 5; i++) {

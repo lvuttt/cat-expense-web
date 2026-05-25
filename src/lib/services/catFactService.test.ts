@@ -43,7 +43,9 @@ describe('catFactService', () => {
         status: 500,
       } as Response);
 
-      await expect(fetchCatFact()).rejects.toThrow('Cat fact API returned HTTP 500');
+      await expect(fetchCatFact()).rejects.toThrow(
+        'Cat fact API returned HTTP 500',
+      );
     });
 
     it('should pass the abort signal to the fetch call', async () => {
@@ -57,7 +59,7 @@ describe('catFactService', () => {
 
       expect(globalThis.fetch).toHaveBeenCalledWith(
         expect.any(String),
-        expect.objectContaining({ signal: controller.signal })
+        expect.objectContaining({ signal: controller.signal }),
       );
     });
   });
@@ -68,7 +70,10 @@ describe('catFactService', () => {
     });
 
     it('should return the stored array of facts', () => {
-      localStorage.setItem(CAT_FACT_CACHE_KEY, JSON.stringify(['fact one', 'fact two']));
+      localStorage.setItem(
+        CAT_FACT_CACHE_KEY,
+        JSON.stringify(['fact one', 'fact two']),
+      );
       expect(getCachedFacts()).toEqual(['fact one', 'fact two']);
     });
 
@@ -78,7 +83,10 @@ describe('catFactService', () => {
     });
 
     it('should return an empty array if stored value is not a string array', () => {
-      localStorage.setItem(CAT_FACT_CACHE_KEY, JSON.stringify({ fact: 'wrong shape' }));
+      localStorage.setItem(
+        CAT_FACT_CACHE_KEY,
+        JSON.stringify({ fact: 'wrong shape' }),
+      );
       expect(getCachedFacts()).toEqual([]);
     });
   });

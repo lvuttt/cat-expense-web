@@ -18,7 +18,9 @@
   const expensesState = createExpenses(expenseStorage);
   const sortState = createSort('name');
 
-  const sortedExpenses = $derived(sortExpenses(expensesState.expenses, sortState.sortConfig));
+  const sortedExpenses = $derived(
+    sortExpenses(expensesState.expenses, sortState.sortConfig),
+  );
   const expenseIds = $derived(sortedExpenses.map((e) => e.id));
 
   const selectionState = createSelection(() => expenseIds);
@@ -53,7 +55,7 @@
     if (selectionState.selectedCount === 0) return;
 
     const idsToDelete = new Set(
-      expenseIds.filter((id) => selectionState.isSelected(id))
+      expenseIds.filter((id) => selectionState.isSelected(id)),
     );
 
     expensesState.deleteExpenses(idsToDelete);
@@ -100,7 +102,8 @@
     </main>
 
     <footer class="app__footer">
-      Made with <span class="app__footer-heart" aria-label="love">❤️</span> for cats everywhere
+      Made with <span class="app__footer-heart" aria-label="love">❤️</span> for cats
+      everywhere
     </footer>
   </div>
 

@@ -49,13 +49,21 @@ export const createSelection = (getItemIds: () => string[]) => {
   }
 
   return {
-    get selectedIds() { return selectedIds; },
-    get selectedCount() { return selectedCount; },
-    get isAllSelected() { return isAllSelected; },
-    get isSomeSelected() { return isSomeSelected; },
+    get selectedIds() {
+      return selectedIds;
+    },
+    get selectedCount() {
+      return selectedCount;
+    },
+    get isAllSelected() {
+      return isAllSelected;
+    },
+    get isSomeSelected() {
+      return isSomeSelected;
+    },
     isSelected,
     toggle,
     toggleAll,
     clearSelection,
   };
-}
+};

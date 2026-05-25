@@ -7,7 +7,7 @@ export const focusTrap = (node: HTMLElement, isOpen: boolean) => {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Tab') {
       const focusable = Array.from(
-        node.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+        node.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
       ).filter((el) => !el.hasAttribute('disabled'));
 
       if (focusable.length === 0) return;
@@ -34,6 +34,6 @@ export const focusTrap = (node: HTMLElement, isOpen: boolean) => {
   return {
     destroy() {
       node.removeEventListener('keydown', handleKeyDown);
-    }
+    },
   };
-}
+};

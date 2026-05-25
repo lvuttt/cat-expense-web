@@ -26,8 +26,20 @@ describe('expenseUtils', () => {
 
     it('should handle large amounts correctly', () => {
       const expenses: Expense[] = [
-        { id: '1', name: 'a', category: 'Furniture', amount: 999999.99, createdAt: '' },
-        { id: '2', name: 'b', category: 'Furniture', amount: 0.01, createdAt: '' },
+        {
+          id: '1',
+          name: 'a',
+          category: 'Furniture',
+          amount: 999999.99,
+          createdAt: '',
+        },
+        {
+          id: '2',
+          name: 'b',
+          category: 'Furniture',
+          amount: 0.01,
+          createdAt: '',
+        },
       ];
       expect(calculateTotal(expenses)).toBe(1000000.0);
     });
@@ -38,7 +50,13 @@ describe('expenseUtils', () => {
       const expenses: Expense[] = [
         { id: '1', name: 'a', category: 'Food', amount: 10.5, createdAt: '' },
         { id: '2', name: 'b', category: 'Food', amount: 20.25, createdAt: '' },
-        { id: '3', name: 'c', category: 'Accessory', amount: 5.0, createdAt: '' },
+        {
+          id: '3',
+          name: 'c',
+          category: 'Accessory',
+          amount: 5.0,
+          createdAt: '',
+        },
       ];
       const sums = sumByCategory(expenses);
       expect(sums.get('Food')).toBe(30.75);
@@ -167,7 +185,11 @@ describe('expenseUtils', () => {
 
   describe('createExpense', () => {
     it('should create an expense object with assigned ID, trimmed name, parsed amount, and current ISO timestamp', () => {
-      const form = { name: '  Premium Kibble  ', category: 'Food' as const, amount: 25.999 };
+      const form = {
+        name: '  Premium Kibble  ',
+        category: 'Food' as const,
+        amount: 25.999,
+      };
       const expense = createExpense(form);
       expect(expense.id).toBeDefined();
       expect(expense.id.length).toBeGreaterThan(10);
@@ -209,7 +231,9 @@ describe('expenseUtils', () => {
 
       try {
         const id = generateId();
-        expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+        expect(id).toMatch(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+        );
       } finally {
         // Restore
         Object.defineProperty(crypto, 'randomUUID', {

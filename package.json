@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "format": "prettier --write .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:e2e": "playwright test e2e-tests",
@@ -16,6 +17,9 @@
   },
   "dependencies": {
     "svelte": "^5.2.0"
+  },
+  "resolutions": {
+    "vite": "^6.3.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -30,9 +34,11 @@
     "gh-pages": "^6.3.0",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
+    "prettier": "^3.8.3",
+    "prettier-plugin-svelte": "^4.0.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12",
+    "vite": "^6.3.5",
     "vitest": "^4.1.7"
   }
 }

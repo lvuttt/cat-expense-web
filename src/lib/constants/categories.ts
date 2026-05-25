@@ -12,7 +12,10 @@ export const CATEGORIES = ['Food', 'Furniture', 'Accessory'] as const;
  * Display metadata for each category.
  * Maps category values to their labels, emoji icons, and CSS class modifiers.
  */
-export const CATEGORY_CONFIG: Record<(typeof CATEGORIES)[number], CategoryMeta> = {
+export const CATEGORY_CONFIG: Record<
+  (typeof CATEGORIES)[number],
+  CategoryMeta
+> = {
   Food: {
     label: 'Food',
     emoji: '🍕',

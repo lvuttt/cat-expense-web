@@ -9,6 +9,7 @@ describe('SpendingChart', () => {
       props: {
         expenses: [],
         topCategories: new Set(),
+        categoryTotals: new Map(),
       },
     });
 
@@ -20,6 +21,10 @@ describe('SpendingChart', () => {
       props: {
         expenses: [sampleExpense, furnitureExpense],
         topCategories: new Set(['Furniture']),
+        categoryTotals: new Map([
+          ['Food', 24.99],
+          ['Furniture', 150.0],
+        ]),
       },
     });
 
@@ -39,6 +44,7 @@ describe('SpendingChart', () => {
       props: {
         expenses: [sampleExpense],
         topCategories: new Set(['Food']),
+        categoryTotals: new Map([['Food', 24.99]]),
       },
     });
 

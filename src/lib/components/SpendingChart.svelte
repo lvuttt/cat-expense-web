@@ -1,17 +1,16 @@
 <script lang="ts">
   import type { Expense, Category } from '$lib/types/models';
   import { CATEGORIES, CATEGORY_CONFIG } from '$lib/constants/app';
-  import { sumByCategory } from '$lib/utils/expenseUtils';
   import { formatCurrency } from '$lib/utils/formatUtils';
 
   interface Props {
     expenses: readonly Expense[];
     topCategories: ReadonlySet<Category>;
+    categoryTotals: Map<Category, number>;
   }
 
-  let { expenses, topCategories }: Props = $props();
+  let { expenses, topCategories, categoryTotals }: Props = $props();
 
-  let categoryTotals = $derived(sumByCategory(expenses));
   let grandTotalCents = $derived(
     [...categoryTotals.values()].reduce(
       (sum, v) => sum + Math.round(v * 100),
@@ -89,7 +88,7 @@
   </section>
 {/if}
 
-<style>
+<style lang="scss">
   /*
    * SpendingChart — BEM Block: .spending-chart
    */
@@ -100,174 +99,170 @@
     background: var(--color-bg-glass);
     border: 1px solid var(--color-bg-glass-border);
     border-radius: var(--radius-lg);
-    animation: slideUp var(--transition-slow) ease both;
-    animation-delay: 150ms;
-  }
 
-  .spending-chart__title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: var(--space-md);
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
-
-  .spending-chart__bars {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  /* ---- Row ---- */
-  .spending-chart__row {
-    display: grid;
-    grid-template-columns: 140px 1fr 120px;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-sm);
-    transition: background var(--transition-fast);
-  }
-
-  .spending-chart__row--top {
-    background: var(--color-highlight-bg);
-    border: 1px solid var(--color-highlight-border);
-  }
-
-  /* ---- Label ---- */
-  .spending-chart__label {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-    min-width: 0;
-  }
-
-  .spending-chart__emoji {
-    font-size: var(--font-size-md);
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .spending-chart__category-name {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .spending-chart__top-badge {
-    font-size: var(--font-size-xs);
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  /* ---- Progress track ---- */
-  .spending-chart__track {
-    height: 8px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: var(--radius-full);
-    overflow: hidden;
-  }
-
-  .spending-chart__fill {
-    height: 100%;
-    border-radius: var(--radius-full);
-    width: 0%;
-    /* Animate from 0% to the computed width on mount */
-    transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Category-specific fill colors */
-  .spending-chart__fill--food {
-    background: linear-gradient(
-      90deg,
-      var(--color-category-food),
-      rgba(249, 115, 22, 0.6)
-    );
-  }
-
-  .spending-chart__fill--furniture {
-    background: linear-gradient(
-      90deg,
-      var(--color-category-furniture),
-      rgba(59, 130, 246, 0.6)
-    );
-  }
-
-  .spending-chart__fill--accessory {
-    background: linear-gradient(
-      90deg,
-      var(--color-category-accessory),
-      rgba(168, 85, 247, 0.6)
-    );
-  }
-
-  /* ---- Amount column ---- */
-  .spending-chart__amount {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-  }
-
-  .spending-chart__total {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-    white-space: nowrap;
-  }
-
-  .spending-chart__pct {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-  }
-
-  /* ---- Responsive ---- */
-  @media (min-width: 500px) and (max-width: 767px) {
-    .spending-chart__row {
-      grid-template-columns: 120px 1fr 100px;
+    &__title {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
       gap: var(--space-sm);
-      padding: var(--space-xs) var(--space-sm);
     }
-  }
 
-  @media (max-width: 499px) {
-    .spending-chart {
+    &__bars {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    /* ---- Row ---- */
+    &__row {
+      display: grid;
+      grid-template-columns: 140px 1fr 120px;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      transition: background var(--transition-fast);
+
+      &--top {
+        background: var(--color-highlight-bg);
+        border: 1px solid var(--color-highlight-border);
+      }
+    }
+
+    /* ---- Label ---- */
+    &__label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-width: 0;
+    }
+
+    &__emoji {
+      font-size: var(--font-size-md);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    &__category-name {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__top-badge {
+      font-size: var(--font-size-xs);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* ---- Progress track ---- */
+    &__track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    &__fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      width: 0%;
+      /* Animate from 0% to the computed width on mount */
+      transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Category-specific fill colors */
+      &--food {
+        background: linear-gradient(
+          90deg,
+          var(--color-category-food),
+          rgba(249, 115, 22, 0.6)
+        );
+      }
+
+      &--furniture {
+        background: linear-gradient(
+          90deg,
+          var(--color-category-furniture),
+          rgba(59, 130, 246, 0.6)
+        );
+      }
+
+      &--accessory {
+        background: linear-gradient(
+          90deg,
+          var(--color-category-accessory),
+          rgba(168, 85, 247, 0.6)
+        );
+      }
+    }
+
+    /* ---- Amount column ---- */
+    &__amount {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    &__total {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+    }
+
+    &__pct {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* ---- Responsive ---- */
+    @media (min-width: 500px) and (max-width: 767px) {
+      .spending-chart__row {
+        grid-template-columns: 120px 1fr 100px;
+        gap: var(--space-sm);
+        padding: var(--space-xs) var(--space-sm);
+      }
+    }
+
+    @media (max-width: 499px) {
       padding: var(--space-md);
       margin-bottom: var(--space-md);
       border-radius: var(--radius-md);
-    }
 
-    .spending-chart__row {
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-      row-gap: var(--space-xs);
-      column-gap: var(--space-sm);
-      padding: var(--space-xs) 0;
-    }
+      .spending-chart__row {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        row-gap: var(--space-xs);
+        column-gap: var(--space-sm);
+        padding: var(--space-xs) 0;
+      }
 
-    .spending-chart__label {
-      grid-column: 1;
-      grid-row: 1;
-    }
+      .spending-chart__label {
+        grid-column: 1;
+        grid-row: 1;
+      }
 
-    .spending-chart__amount {
-      grid-column: 2;
-      grid-row: 1;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--space-xs);
-    }
+      .spending-chart__amount {
+        grid-column: 2;
+        grid-row: 1;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-xs);
+      }
 
-    .spending-chart__track {
-      grid-column: 1 / -1;
-      grid-row: 2;
+      .spending-chart__track {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
     }
   }
 </style>

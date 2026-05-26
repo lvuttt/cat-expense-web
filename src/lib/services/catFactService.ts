@@ -58,19 +58,37 @@ export function cacheFact(fact: string): void {
 
 /**
  * Fetches a random cat fact from the Cat Facts API and caches it.
+ * Implements exponential backoff for retries.
  *
  * @param signal - Optional AbortSignal for cancellation
+ * @param retries - Number of retries remaining
+ * @param delay - Current delay before retrying
  * @returns The cat fact string
  * @throws Error if the request fails or response is invalid
  */
-export async function fetchCatFact(signal?: AbortSignal): Promise<string> {
-  const response = await fetch(CAT_FACT_API_URL, { signal });
+export async function fetchCatFact(
+  signal?: AbortSignal,
+  retries = 3,
+  delay = 500,
+): Promise<string> {
+  try {
+    const response = await fetch(CAT_FACT_API_URL, { signal });
 
-  if (!response.ok) {
-    throw new Error(`Cat fact API returned HTTP ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Cat fact API returned HTTP ${response.status}`);
+    }
+
+    const data: CatFactApiResponse = await response.json();
+    cacheFact(data.fact);
+    return data.fact;
+  } catch (error) {
+    if (signal?.aborted) {
+      throw error;
+    }
+    if (retries > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return fetchCatFact(signal, retries - 1, delay * 2);
+    }
+    throw error;
   }
-
-  const data: CatFactApiResponse = await response.json();
-  cacheFact(data.fact);
-  return data.fact;
 }

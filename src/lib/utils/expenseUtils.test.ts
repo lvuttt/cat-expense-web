@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import type { Expense, Category } from '../types/models';
 import {
   calculateTotal,
@@ -220,39 +220,18 @@ describe('expenseUtils', () => {
   });
 
   describe('generateId', () => {
-    it('should generate a valid UUID shape even if crypto.randomUUID is not available', () => {
-      // Temporarily mock crypto.randomUUID to undefined
-      const originalUUID = crypto.randomUUID;
-      Object.defineProperty(crypto, 'randomUUID', {
-        value: undefined,
-        writable: true,
-        configurable: true,
-      });
-
-      try {
-        const id = generateId();
-        expect(id).toMatch(
-          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-        );
-      } finally {
-        // Restore
-        Object.defineProperty(crypto, 'randomUUID', {
-          value: originalUUID,
-          writable: true,
-          configurable: true,
-        });
-      }
+    it('should generate a valid UUIDv4 shape', () => {
+      const id = generateId();
+      expect(typeof id).toBe('string');
+      expect(id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
-    it('should use crypto.randomUUID when available', () => {
-      const originalUUID = crypto.randomUUID;
-      if (typeof originalUUID === 'function') {
-        const spy = vi.spyOn(crypto, 'randomUUID');
-        const id = generateId();
-        expect(spy).toHaveBeenCalled();
-        expect(id).toBeDefined();
-        spy.mockRestore();
-      }
+    it('should generate unique ids', () => {
+      const id1 = generateId();
+      const id2 = generateId();
+      expect(id1).not.toBe(id2);
     });
   });
 });

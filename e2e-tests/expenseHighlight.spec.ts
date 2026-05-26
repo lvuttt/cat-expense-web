@@ -2,6 +2,13 @@ import { test, expect, Page } from '@playwright/test';
 
 test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
   test.beforeEach(async ({ page }) => {
+    // Auto-accept all confirmation dialogs
+    page.on('dialog', async (dialog) => {
+      if (dialog.type() === 'confirm') {
+        await dialog.accept();
+      }
+    });
+
     // Navigate to the app
     await page.goto('/');
     // Clear localStorage to ensure a clean slate
@@ -298,7 +305,7 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
     page,
   }) => {
     await page.click('id=add-expense-button');
-    const factText = page.locator('.expense-dialog__cat-fact-text');
+    const factText = page.locator('.cat-fact-panel__text');
     await expect(factText).toBeVisible();
     await expect(factText).not.toBeEmpty();
   });
@@ -452,11 +459,12 @@ test.describe('Cat Expense Tracker — Top Category Highlighting', () => {
   });
 
   test('should show fallback cat facts when offline', async ({ page }) => {
+    // Block the catfact.ninja endpoint to trigger offline fallback
     await page.route('https://catfact.ninja/fact', (route) => route.abort());
 
     await page.click('id=add-expense-button');
 
-    const factText = page.locator('.expense-dialog__cat-fact-text');
+    const factText = page.locator('.cat-fact-panel__text');
     await expect(factText).toHaveText(/sleep for about 13–16 hours/);
   });
 

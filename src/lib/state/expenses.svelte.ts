@@ -3,8 +3,9 @@ import type { IStorageService } from '../services/storageService';
 import {
   createExpense,
   duplicateExpenseItem,
-  getTopSpendingCategories,
+  sumByCategory,
   calculateTotal,
+  getTopSpendingCategories,
 } from '../utils/expenseUtils';
 
 export const createExpenses = (storage: IStorageService<Expense[]>) => {
@@ -18,8 +19,9 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
     storage.save(expenses);
   });
 
-  const topCategories = $derived.by(() => getTopSpendingCategories(expenses));
-  const totalAmount = $derived.by(() => calculateTotal(expenses));
+  const categoryTotals = $derived(sumByCategory(expenses));
+  const totalAmount = $derived(calculateTotal(expenses));
+  const topCategories = $derived(getTopSpendingCategories(expenses));
 
   function addExpense(formData: ExpenseFormData): void {
     const newExpense = createExpense(formData);
@@ -27,13 +29,14 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
   }
 
   function updateExpense(id: string, formData: ExpenseFormData): void {
+    const newAmount = Number(formData.amount.toFixed(2));
     expenses = expenses.map((expense) =>
       expense.id === id
         ? {
             ...expense,
             name: formData.name.trim(),
             category: formData.category,
-            amount: Number(formData.amount.toFixed(2)),
+            amount: newAmount,
           }
         : expense,
     );
@@ -46,7 +49,8 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
   function duplicateExpense(id: string): void {
     const target = expenses.find((expense) => expense.id === id);
     if (!target) return;
-    expenses = [...expenses, duplicateExpenseItem(target)];
+    const newExp = duplicateExpenseItem(target);
+    expenses = [...expenses, newExp];
   }
 
   return {
@@ -61,6 +65,9 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
     },
     get totalAmount() {
       return totalAmount;
+    },
+    get categoryTotals() {
+      return categoryTotals;
     },
     addExpense,
     updateExpense,

@@ -56,39 +56,39 @@
   }
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_interactive_supports_focus -->
 <div
   class={rowClasses}
   role="row"
   aria-selected={isSelected}
   data-expense-id={expense.id}
   onclick={handleRowClick}
+  onkeydown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleRowClick();
+    }
+  }}
+  tabindex="0"
 >
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div
-    class="expense-row__cell expense-row__cell--checkbox"
-    role="cell"
-    onclick={(e) => e.stopPropagation()}
-  >
+  <div class="expense-row__cell expense-row__cell--checkbox" role="cell">
     <input
       class="expense-row__checkbox"
       type="checkbox"
       checked={isSelected}
+      onclick={(e) => e.stopPropagation()}
       onchange={() => onToggleSelect(expense.id)}
       aria-label={`Select ${expense.name}`}
       id={`select-${expense.id}`}
     />
   </div>
 
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="expense-row__cell expense-row__cell--name"
     role="cell"
     data-tooltip={showTooltip ? expense.name : undefined}
     onmouseenter={handleMouseEnter}
     onmouseleave={handleMouseLeave}
+    tabindex="-1"
   >
     <span bind:this={nameRef} class="expense-row__name-text"
       >{expense.name}</span
@@ -106,16 +106,13 @@
     {formatCurrency(expense.amount)}
   </div>
 
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div
-    class="expense-row__cell expense-row__cell--actions"
-    role="cell"
-    onclick={(e) => e.stopPropagation()}
-  >
+  <div class="expense-row__cell expense-row__cell--actions" role="cell">
     <button
       class="expense-row__action-button expense-row__action-button--edit"
-      onclick={() => onEdit(expense)}
+      onclick={(e) => {
+        e.stopPropagation();
+        onEdit(expense);
+      }}
       type="button"
       aria-label={`Edit ${expense.name}`}
       data-tooltip="Edit"
@@ -141,7 +138,10 @@
     </button>
     <button
       class="expense-row__action-button expense-row__action-button--duplicate"
-      onclick={() => onDuplicate(expense.id)}
+      onclick={(e) => {
+        e.stopPropagation();
+        onDuplicate(expense.id);
+      }}
       type="button"
       aria-label={`Duplicate ${expense.name}`}
       data-tooltip="Duplicate"
@@ -168,7 +168,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   /*
    * ExpenseRow — BEM Block: .expense-row
    */
@@ -188,258 +188,253 @@
     transition:
       background-color var(--transition-fast),
       box-shadow var(--transition-fast);
-  }
 
-  .expense-row:hover {
-    background: var(--color-bg-glass-hover);
-  }
+    &:hover {
+      background: var(--color-bg-glass-hover);
+    }
 
-  /* Highlighted — belongs to top spending category */
-  .expense-row--highlighted {
-    background: var(--color-highlight-bg);
-  }
+    /* Highlighted — belongs to top spending category */
+    &--highlighted {
+      background: var(--color-highlight-bg);
 
-  .expense-row--highlighted:hover {
-    background: rgba(168, 85, 247, 0.16);
-  }
+      &:hover {
+        background: rgba(168, 85, 247, 0.16);
+      }
+    }
 
-  /* Selected via checkbox */
-  .expense-row--selected {
-    background: rgba(168, 85, 247, 0.06);
-  }
+    /* Selected via checkbox */
+    &--selected {
+      background: rgba(168, 85, 247, 0.06);
 
-  .expense-row--highlighted.expense-row--selected {
-    background: rgba(168, 85, 247, 0.2);
-  }
+      &.expense-row--highlighted {
+        background: rgba(168, 85, 247, 0.2);
+      }
+    }
 
-  /* Cells */
-  .expense-row__cell {
-    display: flex;
-    align-items: center;
-  }
+    /* Cells */
+    &__cell {
+      display: flex;
+      align-items: center;
 
-  .expense-row__cell--checkbox {
-    justify-content: center;
-  }
+      &--checkbox {
+        justify-content: center;
+      }
 
-  .expense-row__cell--name {
-    position: relative;
-    min-width: 0;
-    width: 100%;
-  }
+      &--name {
+        position: relative;
+        min-width: 0;
+        width: 100%;
+      }
 
-  .expense-row__name-text {
-    display: block;
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-right: var(--space-sm);
-    width: 100%;
-  }
+      &--amount {
+        font-weight: var(--font-weight-semibold);
+        font-variant-numeric: tabular-nums;
+        color: var(--color-text-primary);
+        justify-content: flex-start;
+      }
 
-  .expense-row__cell--amount {
-    font-weight: var(--font-weight-semibold);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-primary);
-    justify-content: flex-start;
-  }
+      &--actions {
+        justify-content: flex-start;
+        gap: var(--space-xs);
+      }
+    }
 
-  .expense-row__cell--actions {
-    justify-content: flex-start;
-    gap: var(--space-xs);
-  }
+    &__name-text {
+      display: block;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-right: var(--space-sm);
+      width: 100%;
+    }
 
-  /* Checkbox */
-  .expense-row__checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    width: var(--checkbox-size);
-    height: var(--checkbox-size);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-xs);
-    background: var(--color-bg-secondary);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition:
-      background-color var(--transition-fast),
-      border-color var(--transition-fast);
-  }
+    /* Checkbox */
+    &__checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: var(--checkbox-size);
+      height: var(--checkbox-size);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-xs);
+      background: var(--color-bg-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
 
-  .expense-row__checkbox:checked {
-    background: var(--color-accent-start);
-    border-color: var(--color-accent-start);
-  }
+      &:checked {
+        background: var(--color-accent-start);
+        border-color: var(--color-accent-start);
 
-  .expense-row__checkbox:checked::after {
-    content: '';
-    position: absolute;
-    width: calc(var(--checkbox-size) * 0.2);
-    height: calc(var(--checkbox-size) * 0.4);
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-    top: calc(var(--checkbox-size) * 0.1);
-    left: calc(var(--checkbox-size) * 0.3);
-  }
+        &::after {
+          content: '';
+          position: absolute;
+          width: calc(var(--checkbox-size) * 0.2);
+          height: calc(var(--checkbox-size) * 0.4);
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+          top: calc(var(--checkbox-size) * 0.1);
+          left: calc(var(--checkbox-size) * 0.3);
+        }
+      }
+    }
 
-  /* Category badge */
-  .expense-row__category-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-2xs) var(--space-sm);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    white-space: nowrap;
-  }
+    /* Category badge */
+    &__category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-2xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      white-space: nowrap;
 
-  .expense-row__category-badge--food {
-    background: var(--color-category-food-bg);
-    color: var(--color-category-food);
-  }
+      &--food {
+        background: var(--color-category-food-bg);
+        color: var(--color-category-food);
+      }
 
-  .expense-row__category-badge--furniture {
-    background: var(--color-category-furniture-bg);
-    color: var(--color-category-furniture);
-  }
+      &--furniture {
+        background: var(--color-category-furniture-bg);
+        color: var(--color-category-furniture);
+      }
 
-  .expense-row__category-badge--accessory {
-    background: var(--color-category-accessory-bg);
-    color: var(--color-category-accessory);
-  }
+      &--accessory {
+        background: var(--color-category-accessory-bg);
+        color: var(--color-category-accessory);
+      }
+    }
 
-  /* Action buttons */
-  .expense-row__action-button {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--action-btn-size);
-    height: var(--action-btn-size);
-    border: none;
-    background: transparent;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    transition:
-      background-color var(--transition-fast),
-      color var(--transition-fast);
-  }
+    /* Action buttons */
+    &__action-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--action-btn-size);
+      height: var(--action-btn-size);
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
 
-  .expense-row__action-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--action-btn-size);
-    height: var(--action-btn-size);
-    flex-shrink: 0;
-  }
+      &:hover {
+        background: var(--color-bg-glass-hover);
+        color: var(--color-text-primary);
+      }
 
-  .expense-row__svg-icon {
-    width: calc(var(--action-btn-size) * 0.5);
-    height: calc(var(--action-btn-size) * 0.5);
-    display: block;
-  }
+      &--edit:hover {
+        color: var(--color-accent-start);
+      }
 
-  .expense-row__action-button:hover {
-    background: var(--color-bg-glass-hover);
-    color: var(--color-text-primary);
-  }
+      &--duplicate:hover {
+        color: var(--color-success);
+      }
+    }
 
-  .expense-row__action-button--edit:hover {
-    color: var(--color-accent-start);
-  }
+    &__action-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--action-btn-size);
+      height: var(--action-btn-size);
+      flex-shrink: 0;
+    }
 
-  .expense-row__action-button--duplicate:hover {
-    color: var(--color-success);
+    &__svg-icon {
+      width: calc(var(--action-btn-size) * 0.5);
+      height: calc(var(--action-btn-size) * 0.5);
+      display: block;
+    }
+
+    /* Mid-range tablet (500px – 767px): compressed single-row grid, matches header columns */
+    @media (min-width: 500px) and (max-width: 767px) {
+      grid-template-columns: 36px 1fr 100px 90px 80px;
+      column-gap: var(--space-sm);
+      padding: var(--space-xs) var(--space-sm);
+
+      .expense-row__category-badge {
+        padding: var(--space-2xs) var(--space-xs);
+        font-size: 0.7rem;
+      }
+    }
+
+    /* Small mobile (< 500px): compact single-row grid, matches header columns */
+    @media (max-width: 499px) {
+      grid-template-columns: 36px 1fr 1fr 75px;
+      column-gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+
+      .expense-row__cell--actions {
+        display: none;
+      }
+    }
   }
 
   /* Premium Custom Tooltips */
   [data-tooltip] {
     position: relative;
-  }
 
-  [data-tooltip]::before,
-  [data-tooltip]::after {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) translateY(0);
-    opacity: 0;
-    pointer-events: none;
-    transition:
-      opacity var(--transition-fast),
-      transform var(--transition-fast);
-    z-index: var(--z-dropdown);
-  }
-
-  /* Tooltip bubble */
-  [data-tooltip]::after {
-    content: attr(data-tooltip);
-    bottom: calc(100% + 6px);
-    background: rgba(26, 26, 46, 0.95);
-    backdrop-filter: blur(4px);
-    color: var(--color-text-primary);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-bg-glass-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    width: max-content;
-    max-width: 280px;
-    white-space: normal;
-    overflow-wrap: break-word;
-    text-align: center;
-  }
-
-  /* Tooltip arrow */
-  [data-tooltip]::before {
-    content: '';
-    bottom: calc(100% + 1px);
-    border-width: 5px 5px 0 5px;
-    border-style: solid;
-    border-color: rgba(26, 26, 46, 0.95) transparent transparent transparent;
-  }
-
-  /* Hover state */
-  [data-tooltip]:hover::before,
-  [data-tooltip]:hover::after {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-6px);
-  }
-
-  /* Mid-range tablet (500px – 767px): compressed single-row grid, matches header columns */
-  @media (min-width: 500px) and (max-width: 767px) {
-    .expense-row {
-      grid-template-columns: 36px 1fr 100px 90px 80px;
-      column-gap: var(--space-sm);
-      padding: var(--space-xs) var(--space-sm);
+    &::before,
+    &::after {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
+      z-index: var(--z-dropdown);
     }
 
-    /* Truncate category badge text to just emoji on tighter columns */
-    .expense-row__category-badge {
-      padding: var(--space-2xs) var(--space-xs);
-      font-size: 0.7rem;
+    /* Tooltip bubble */
+    &::after {
+      content: attr(data-tooltip);
+      bottom: calc(100% + 6px);
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(4px);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-bg-glass-border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      width: max-content;
+      max-width: 280px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      text-align: center;
     }
-  }
 
-  /* Small mobile (< 500px): compact single-row grid, matches header columns */
-  @media (max-width: 499px) {
-    .expense-row {
-      grid-template-columns: 36px 1fr 1fr 75px;
-      column-gap: var(--space-xs);
-      padding: var(--space-xs) var(--space-sm);
+    /* Tooltip arrow */
+    &::before {
+      content: '';
+      bottom: calc(100% + 1px);
+      border-width: 5px 5px 0 5px;
+      border-style: solid;
+      border-color: rgba(26, 26, 46, 0.95) transparent transparent transparent;
     }
 
-    .expense-row__cell--actions {
-      display: none;
+    /* Hover state */
+    &:hover::before,
+    &:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
     }
   }
 </style>

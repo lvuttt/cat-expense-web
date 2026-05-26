@@ -33,7 +33,7 @@ describe('CatFactPanel', () => {
     });
     expect(refreshButton).toHaveProperty('disabled', true);
     expect(refreshButton.className).toContain(
-      'expense-dialog__cat-fact-refresh--spinning',
+      'cat-fact-panel__refresh--spinning',
     );
   });
 
@@ -64,8 +64,6 @@ describe('CatFactPanel', () => {
       },
     });
 
-    expect(
-      container.querySelector('.expense-dialog__cat-fact--loading'),
-    ).toBeTruthy();
+    expect(container.querySelector('.cat-fact-panel--loading')).toBeTruthy();
   });
 });

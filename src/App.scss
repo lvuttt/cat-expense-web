@@ -1,0 +1,43 @@
+/*
+ * App — BEM Block: .app
+ */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+    flex: 1;
+
+    /* Responsive */
+    @media (max-width: 767px) {
+      padding: 0 var(--space-md);
+    }
+
+    @media (max-width: 500px) {
+      padding: 0 var(--space-xs);
+    }
+  }
+
+  &__main {
+    padding-bottom: var(--space-3xl);
+  }
+
+  &__footer {
+    text-align: center;
+    padding: var(--space-lg) var(--space-md);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    border-top: 1px solid var(--color-bg-glass-border);
+    margin-top: auto;
+  }
+
+  &__footer-heart {
+    color: var(--color-accent-mid);
+  }
+}

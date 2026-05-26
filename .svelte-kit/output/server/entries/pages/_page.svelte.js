@@ -1,7 +1,10 @@
-import { K as derived, F as attr_class, J as clsx, z as attr, N as ensure_array_like, Q as stringify, G as attr_style } from "../../chunks/index.js";
+import { a9 as ssr_context, x as derived, l as attr_class, q as clsx, k as attr, D as escape_html, A as ensure_array_like, ab as stringify, m as attr_style } from "../../chunks/index.js";
+import { v4 } from "uuid";
 import "clsx";
-import { e as escape_html } from "../../chunks/escaping.js";
-import { o as onDestroy } from "../../chunks/index-server.js";
+function onDestroy(fn) {
+  /** @type {SSRContext} */
+  ssr_context.r.on_destroy(fn);
+}
 const CATEGORIES = ["Food", "Furniture", "Accessory"];
 const CATEGORY_CONFIG = {
   Food: {
@@ -25,6 +28,7 @@ const CAT_FACT_API_URL = "https://catfact.ninja/fact";
 const FALLBACK_CAT_FACT = "Cats sleep for about 13–16 hours a day, making them one of the sleepiest animals! 😴";
 const CAT_FACT_CACHE_KEY = "cat-fact-cache";
 const CAT_FACT_CACHE_MAX = 10;
+const VIRTUAL_ROW_HEIGHT = 48;
 class LocalStorageService {
   key;
   constructor(key) {
@@ -86,7 +90,7 @@ function getTopSpendingCategories(expenses) {
   const maxAmount = Math.max(...categorySums.values());
   const topCategories = /* @__PURE__ */ new Set();
   for (const [category, amount] of categorySums) {
-    if (amount === maxAmount) {
+    if (Math.round(amount * 100) === Math.round(maxAmount * 100)) {
       topCategories.add(category);
     }
   }
@@ -96,14 +100,7 @@ function isInTopCategory(expense, topCategories) {
   return topCategories.has(expense.category);
 }
 function generateId() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0;
-    const v = c === "x" ? r : r & 3 | 8;
-    return v.toString(16);
-  });
+  return v4();
 }
 function createExpense(formData) {
   return {
@@ -125,18 +122,20 @@ function duplicateExpenseItem(expense) {
 const createExpenses = (storage) => {
   let expenses = [];
   expenses = storage.load() ?? [];
-  const topCategories = derived(() => getTopSpendingCategories(expenses));
+  const categoryTotals = derived(() => sumByCategory(expenses));
   const totalAmount = derived(() => calculateTotal(expenses));
+  const topCategories = derived(() => getTopSpendingCategories(expenses));
   function addExpense(formData) {
     const newExpense = createExpense(formData);
     expenses = [...expenses, newExpense];
   }
   function updateExpense(id, formData) {
+    const newAmount = Number(formData.amount.toFixed(2));
     expenses = expenses.map((expense) => expense.id === id ? {
       ...expense,
       name: formData.name.trim(),
       category: formData.category,
-      amount: Number(formData.amount.toFixed(2))
+      amount: newAmount
     } : expense);
   }
   function deleteExpenses(ids) {
@@ -145,7 +144,8 @@ const createExpenses = (storage) => {
   function duplicateExpense(id) {
     const target = expenses.find((expense) => expense.id === id);
     if (!target) return;
-    expenses = [...expenses, duplicateExpenseItem(target)];
+    const newExp = duplicateExpenseItem(target);
+    expenses = [...expenses, newExp];
   }
   return {
     get expenses() {
@@ -159,6 +159,9 @@ const createExpenses = (storage) => {
     },
     get totalAmount() {
       return totalAmount();
+    },
+    get categoryTotals() {
+      return categoryTotals();
     },
     addExpense,
     updateExpense,
@@ -290,14 +293,13 @@ function ActionBar($$renderer, $$props) {
 }
 function SpendingChart($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
-    let { expenses, topCategories } = $$props;
-    let categoryTotals = derived(() => sumByCategory(expenses));
-    let grandTotalCents = derived(() => [...categoryTotals().values()].reduce((sum, v) => sum + Math.round(v * 100), 0));
+    let { expenses, topCategories, categoryTotals } = $$props;
+    let grandTotalCents = derived(() => [...categoryTotals.values()].reduce((sum, v) => sum + Math.round(v * 100), 0));
     let grandTotal = derived(() => grandTotalCents() / 100);
     let rows = derived(() => CATEGORIES.map((cat) => ({
       category: cat,
-      total: categoryTotals().get(cat) ?? 0,
-      pct: grandTotal() > 0 ? (categoryTotals().get(cat) ?? 0) / grandTotal() * 100 : 0,
+      total: categoryTotals.get(cat) ?? 0,
+      pct: grandTotal() > 0 ? (categoryTotals.get(cat) ?? 0) / grandTotal() * 100 : 0,
       isTop: topCategories.has(cat),
       meta: CATEGORY_CONFIG[cat]
     })).filter((r) => r.total > 0));
@@ -366,7 +368,7 @@ function ExpenseRow($$renderer, $$props) {
       isSelected ? "expense-row--selected" : ""
     ].filter(Boolean).join(" "));
     let badgeClass = derived(() => `expense-row__category-badge expense-row__category-badge--${categoryMeta().cssClass}`);
-    $$renderer2.push(`<div${attr_class(clsx(rowClasses()), "svelte-qp83ik")} role="row"${attr("aria-selected", isSelected)}${attr("data-expense-id", expense.id)}><div class="expense-row__cell expense-row__cell--checkbox svelte-qp83ik" role="cell"><input class="expense-row__checkbox svelte-qp83ik" type="checkbox"${attr("checked", isSelected, true)}${attr("aria-label", `Select ${expense.name}`)}${attr("id", `select-${expense.id}`)}/></div> <div class="expense-row__cell expense-row__cell--name svelte-qp83ik" role="cell"${attr("data-tooltip", void 0)}><span class="expense-row__name-text svelte-qp83ik">${escape_html(expense.name)}</span></div> <div class="expense-row__cell expense-row__cell--category svelte-qp83ik" role="cell"><span${attr_class(clsx(badgeClass()), "svelte-qp83ik")}><span aria-hidden="true">${escape_html(categoryMeta().emoji)}</span> ${escape_html(categoryMeta().label)}</span></div> <div class="expense-row__cell expense-row__cell--amount svelte-qp83ik" role="cell">${escape_html(formatCurrency(expense.amount))}</div>  <div class="expense-row__cell expense-row__cell--actions svelte-qp83ik" role="cell"><button class="expense-row__action-button expense-row__action-button--edit svelte-qp83ik" type="button"${attr("aria-label", `Edit ${expense.name}`)} data-tooltip="Edit"><span class="expense-row__action-icon svelte-qp83ik"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="expense-row__svg-icon svelte-qp83ik" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></span></button> <button class="expense-row__action-button expense-row__action-button--duplicate svelte-qp83ik" type="button"${attr("aria-label", `Duplicate ${expense.name}`)} data-tooltip="Duplicate"><span class="expense-row__action-icon svelte-qp83ik"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="expense-row__svg-icon svelte-qp83ik" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></span></button></div></div>`);
+    $$renderer2.push(`<div${attr_class(clsx(rowClasses()), "svelte-qp83ik")} role="row"${attr("aria-selected", isSelected)}${attr("data-expense-id", expense.id)} tabindex="0"><div class="expense-row__cell expense-row__cell--checkbox svelte-qp83ik" role="cell"><input class="expense-row__checkbox svelte-qp83ik" type="checkbox"${attr("checked", isSelected, true)}${attr("aria-label", `Select ${expense.name}`)}${attr("id", `select-${expense.id}`)}/></div> <div class="expense-row__cell expense-row__cell--name svelte-qp83ik" role="cell"${attr("data-tooltip", void 0)} tabindex="-1"><span class="expense-row__name-text svelte-qp83ik">${escape_html(expense.name)}</span></div> <div class="expense-row__cell expense-row__cell--category svelte-qp83ik" role="cell"><span${attr_class(clsx(badgeClass()), "svelte-qp83ik")}><span aria-hidden="true">${escape_html(categoryMeta().emoji)}</span> ${escape_html(categoryMeta().label)}</span></div> <div class="expense-row__cell expense-row__cell--amount svelte-qp83ik" role="cell">${escape_html(formatCurrency(expense.amount))}</div> <div class="expense-row__cell expense-row__cell--actions svelte-qp83ik" role="cell"><button class="expense-row__action-button expense-row__action-button--edit svelte-qp83ik" type="button"${attr("aria-label", `Edit ${expense.name}`)} data-tooltip="Edit"><span class="expense-row__action-icon svelte-qp83ik"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="expense-row__svg-icon svelte-qp83ik" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></span></button> <button class="expense-row__action-button expense-row__action-button--duplicate svelte-qp83ik" type="button"${attr("aria-label", `Duplicate ${expense.name}`)} data-tooltip="Duplicate"><span class="expense-row__action-icon svelte-qp83ik"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="expense-row__svg-icon svelte-qp83ik" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></span></button></div></div>`);
   });
 }
 function ExpenseTable($$renderer, $$props) {
@@ -378,7 +380,7 @@ function ExpenseTable($$renderer, $$props) {
       isAllSelected,
       isSelected
     } = $$props;
-    const ROW_HEIGHT = 48;
+    const ROW_HEIGHT = VIRTUAL_ROW_HEIGHT;
     const SORTABLE_COLUMNS = [
       { field: "name", label: "Item Name", className: "" },
       { field: "category", label: "Category", className: "" },
@@ -449,14 +451,25 @@ function cacheFact(fact) {
   } catch {
   }
 }
-async function fetchCatFact(signal) {
-  const response = await fetch(CAT_FACT_API_URL, { signal });
-  if (!response.ok) {
-    throw new Error(`Cat fact API returned HTTP ${response.status}`);
+async function fetchCatFact(signal, retries = 3, delay = 500) {
+  try {
+    const response = await fetch(CAT_FACT_API_URL, { signal });
+    if (!response.ok) {
+      throw new Error(`Cat fact API returned HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    cacheFact(data.fact);
+    return data.fact;
+  } catch (error) {
+    if (signal?.aborted) {
+      throw error;
+    }
+    if (retries > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return fetchCatFact(signal, retries - 1, delay * 2);
+    }
+    throw error;
   }
-  const data = await response.json();
-  cacheFact(data.fact);
-  return data.fact;
 }
 const getOfflineFact = () => {
   const cached = getCachedFacts();
@@ -543,7 +556,8 @@ function _page($$renderer, $$props) {
     $$renderer2.push(`<!----> `);
     SpendingChart($$renderer2, {
       expenses: expensesState.expenses,
-      topCategories: expensesState.topCategories
+      topCategories: expensesState.topCategories,
+      categoryTotals: expensesState.categoryTotals
     });
     $$renderer2.push(`<!----> `);
     ExpenseTable($$renderer2, {

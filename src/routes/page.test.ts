@@ -20,6 +20,7 @@ describe('+page.svelte', () => {
   beforeEach(() => {
     localStorage.clear();
     mockCatFactFetch();
+    vi.stubGlobal('confirm', vi.fn().mockReturnValue(true));
   });
 
   afterEach(() => {

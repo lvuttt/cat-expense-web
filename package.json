@@ -12,11 +12,13 @@
     "test": "vitest run",
     "test:e2e": "playwright test e2e-tests",
     "test:visual": "playwright test visual-tests",
+    "test:cov": "vitest run --coverage",
     "predeploy": "GITHUB_REPOSITORY=lvuttt/cat-expense-web yarn build",
     "deploy": "gh-pages-clean && gh-pages -d build"
   },
   "dependencies": {
-    "svelte": "^5.2.0"
+    "svelte": "^5.2.0",
+    "uuid": "^14.0.0"
   },
   "resolutions": {
     "vite": "^6.3.5"
@@ -30,12 +32,15 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/svelte": "^5.2.4",
     "@types/node": "^24.12.3",
+    "@types/uuid": "^11.0.0",
+    "@vitest/coverage-v8": "^4.1.7",
     "eslint": "^10.3.0",
     "gh-pages": "^6.3.0",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
     "prettier": "^3.8.3",
     "prettier-plugin-svelte": "^4.0.1",
+    "sass": "^1.100.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^6.3.5",

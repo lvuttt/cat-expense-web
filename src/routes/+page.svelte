@@ -54,6 +54,14 @@
   function handleDeleteClick() {
     if (selectionState.selectedCount === 0) return;
 
+    const count = selectionState.selectedCount;
+    const message =
+      count === 1
+        ? 'Are you sure you want to delete this expense?'
+        : `Are you sure you want to delete these ${count} expenses?`;
+
+    if (!window.confirm(message)) return;
+
     const idsToDelete = new Set(
       expenseIds.filter((id) => selectionState.isSelected(id)),
     );
@@ -84,6 +92,7 @@
       <SpendingChart
         expenses={expensesState.expenses}
         topCategories={expensesState.topCategories}
+        categoryTotals={expensesState.categoryTotals}
       />
 
       <ExpenseTable

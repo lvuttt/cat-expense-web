@@ -29,4 +29,6 @@ export const VALIDATION = {
   AMOUNT_DECIMALS: 2,
 } as const;
 
+export const VIRTUAL_ROW_HEIGHT = 48;
+
 export { CATEGORIES, CATEGORY_CONFIG } from './categories';

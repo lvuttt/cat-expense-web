@@ -3,6 +3,7 @@
  * No side effects — easily unit-testable.
  */
 
+import { v4 as uuidv4 } from 'uuid';
 import type { Expense, Category, ExpenseFormData } from '../types/models';
 
 /**
@@ -50,7 +51,7 @@ export function getTopSpendingCategories(
 
   const topCategories = new Set<Category>();
   for (const [category, amount] of categorySums) {
-    if (amount === maxAmount) {
+    if (Math.round(amount * 100) === Math.round(maxAmount * 100)) {
       topCategories.add(category);
     }
   }
@@ -70,22 +71,10 @@ export function isInTopCategory(
 
 /**
  * Generates a unique identifier.
- * Uses crypto.randomUUID() when available (secure contexts/localhost).
- * Falls back to a pseudorandom algorithm on non-secure contexts (e.g. mobile over HTTP).
+ * Uses uuid v4.
  */
 export function generateId(): string {
-  if (
-    typeof crypto !== 'undefined' &&
-    typeof crypto.randomUUID === 'function'
-  ) {
-    return crypto.randomUUID();
-  }
-  // Math.random-based RFC4122 v4 UUID generator fallback
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+  return uuidv4();
 }
 
 /**

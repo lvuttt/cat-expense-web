@@ -59,11 +59,11 @@ cat-expense-web/
 └── src/
     ├── app.html                  # SvelteKit HTML entry template
     ├── App.css                   # Main container styles
-    ├── index.css                 # Global theme variables, resets, animations
+    ├── index.css                 # Global theme variables, resets
     │
     ├── routes/                   # SvelteKit routing (client-side SPA)
     │   ├── +layout.ts            # Disables SSR, enables static prerendering
-    │   ├── +layout.svelte        # Global CSS + ErrorBoundary shell
+    │   ├── +layout.svelte        # Global CSS layout shell
     │   ├── +page.svelte          # Dashboard orchestrator
     │   ├── layout.test.ts        # Unit tests for +layout.svelte
     │   └── page.test.ts          # Unit tests for +page.svelte
@@ -72,7 +72,6 @@ cat-expense-web/
         ├── components/           # Svelte UI (each may have a *.test.ts)
         │   ├── ActionBar.svelte
         │   ├── CatFactPanel.svelte
-        │   ├── ErrorBoundary.svelte
         │   ├── ExpenseDialog.svelte
         │   ├── ExpenseForm.svelte
         │   ├── ExpenseRow.svelte
@@ -114,7 +113,6 @@ cat-expense-web/
         │
         └── test/                 # Test-only helpers (not production code)
             ├── fixtures.ts       # Shared sample `Expense` objects
-            ├── ErrorBoundaryHost.svelte
             └── LayoutHost.svelte
 ```
 

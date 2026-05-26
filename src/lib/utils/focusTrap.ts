@@ -1,6 +1,4 @@
 export const focusTrap = (node: HTMLElement, isOpen: boolean) => {
-  if (!isOpen) return;
-
   const FOCUSABLE_SELECTOR =
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -29,11 +27,34 @@ export const focusTrap = (node: HTMLElement, isOpen: boolean) => {
     }
   };
 
-  node.addEventListener('keydown', handleKeyDown);
+  let active = false;
+
+  const activate = () => {
+    if (active) return;
+    node.addEventListener('keydown', handleKeyDown);
+    active = true;
+  };
+
+  const deactivate = () => {
+    if (!active) return;
+    node.removeEventListener('keydown', handleKeyDown);
+    active = false;
+  };
+
+  if (isOpen) {
+    activate();
+  }
 
   return {
+    update(newIsOpen: boolean) {
+      if (newIsOpen) {
+        activate();
+      } else {
+        deactivate();
+      }
+    },
     destroy() {
-      node.removeEventListener('keydown', handleKeyDown);
+      deactivate();
     },
   };
 };

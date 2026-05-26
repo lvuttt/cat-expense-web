@@ -57,11 +57,33 @@
   let hasExpenses = $derived(expenses.length > 0);
 
   let containerEl = $state<HTMLDivElement | null>(null);
-  let virtualList = createVirtualList(() => expenses, ROW_HEIGHT);
+  let virtualList = createVirtualList(
+    () => expenses,
+    (expense) => expense.id,
+    ROW_HEIGHT,
+  );
 
   $effect(() => {
     virtualList.container = containerEl;
   });
+
+  const measureAction = (node: HTMLDivElement, id: string) => {
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const height = node.offsetHeight;
+          virtualList.measureRow(id, height);
+        }
+      });
+      resizeObserver.observe(node);
+    }
+    return {
+      destroy() {
+        resizeObserver?.disconnect();
+      },
+    };
+  };
 
   let checkboxEl = $state<HTMLInputElement | null>(null);
 
@@ -144,10 +166,11 @@
         : 'auto'};"
     >
       {#if hasExpenses}
-        {#each virtualList.visibleItems as { item: expense, originalIndex } (expense.id)}
+        {#each virtualList.visibleItems as { item: expense, originalIndex, offset } (expense.id)}
           <div
             class="expense-table__row-wrapper"
-            style="top: {originalIndex * ROW_HEIGHT}px;"
+            style="position: absolute; top: {offset}px; left: 0; right: 0; height: auto;"
+            use:measureAction={expense.id}
           >
             <ExpenseRow
               {expense}
@@ -347,7 +370,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      height: 48px;
+      height: auto;
     }
 
     /* Divider between rows */

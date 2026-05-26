@@ -24,18 +24,18 @@ const SORT_STRATEGIES: Record<SortField, CompareFn> = {
  * Sorts an array of expenses according to the given configuration.
  * Returns a new sorted array — does NOT mutate the input.
  */
-export function sortExpenses(
+export const sortExpenses = (
   expenses: Expense[],
   config: SortConfig,
-): Expense[] {
+): Expense[] => {
   const compareFn = SORT_STRATEGIES[config.field];
   const sorted = [...expenses].sort(compareFn);
   return config.direction === 'desc' ? sorted.reverse() : sorted;
-}
+};
 
 /**
  * Toggles sort direction between ascending and descending.
  */
-export function toggleSortDirection(current: SortDirection): SortDirection {
+export const toggleSortDirection = (current: SortDirection): SortDirection => {
   return current === 'asc' ? 'desc' : 'asc';
-}
+};

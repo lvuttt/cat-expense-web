@@ -20,9 +20,9 @@ export interface ValidationErrors {
  * Validates expense form data and returns any errors found.
  * Returns an empty-ish object (no truthy values) when valid.
  */
-export function validateExpenseForm(
+export const validateExpenseForm = (
   data: Partial<ExpenseFormData>,
-): ValidationErrors {
+): ValidationErrors => {
   const errors: ValidationErrors = {};
 
   // Name validation
@@ -50,11 +50,11 @@ export function validateExpenseForm(
   }
 
   return errors;
-}
+};
 
 /**
  * Returns true if the validation errors object contains any errors.
  */
-export function hasErrors(errors: ValidationErrors): boolean {
+export const hasErrors = (errors: ValidationErrors): boolean => {
   return Object.values(errors).some(Boolean);
-}
+};

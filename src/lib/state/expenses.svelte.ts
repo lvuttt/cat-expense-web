@@ -23,12 +23,12 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
   const totalAmount = $derived(calculateTotal(expenses));
   const topCategories = $derived(getTopSpendingCategories(expenses));
 
-  function addExpense(formData: ExpenseFormData): void {
+  const addExpense = (formData: ExpenseFormData): void => {
     const newExpense = createExpense(formData);
     expenses = [...expenses, newExpense];
-  }
+  };
 
-  function updateExpense(id: string, formData: ExpenseFormData): void {
+  const updateExpense = (id: string, formData: ExpenseFormData): void => {
     const newAmount = Number(formData.amount.toFixed(2));
     expenses = expenses.map((expense) =>
       expense.id === id
@@ -40,18 +40,18 @@ export const createExpenses = (storage: IStorageService<Expense[]>) => {
           }
         : expense,
     );
-  }
+  };
 
-  function deleteExpenses(ids: Set<string>): void {
+  const deleteExpenses = (ids: Set<string>): void => {
     expenses = expenses.filter((expense) => !ids.has(expense.id));
-  }
+  };
 
-  function duplicateExpense(id: string): void {
+  const duplicateExpense = (id: string): void => {
     const target = expenses.find((expense) => expense.id === id);
     if (!target) return;
     const newExp = duplicateExpenseItem(target);
     expenses = [...expenses, newExp];
-  }
+  };
 
   return {
     get expenses() {

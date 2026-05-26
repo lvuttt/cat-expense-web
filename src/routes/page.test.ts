@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/svelte';
 import Page from './+page.svelte';
 import { STORAGE_KEY } from '$lib/constants/app';
 
-function mockCatFactFetch() {
+const mockCatFactFetch = () => {
   vi.stubGlobal(
     'fetch',
     vi.fn().mockResolvedValue({
@@ -14,7 +14,7 @@ function mockCatFactFetch() {
       }),
     } as Response),
   );
-}
+};
 
 describe('+page.svelte', () => {
   beforeEach(() => {

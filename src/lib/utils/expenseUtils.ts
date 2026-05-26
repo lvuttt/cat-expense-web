@@ -10,21 +10,21 @@ import type { Expense, Category, ExpenseFormData } from '../types/models';
  * Calculates the total amount across all expenses.
  * Uses fixed-point arithmetic to avoid floating point drift.
  */
-export function calculateTotal(expenses: readonly Expense[]): number {
+export const calculateTotal = (expenses: readonly Expense[]): number => {
   const totalCents = expenses.reduce(
     (sum, expense) => sum + Math.round(expense.amount * 100),
     0,
   );
   return totalCents / 100;
-}
+};
 
 /**
  * Groups expenses by category and sums their amounts.
  * Returns a Map of category → total amount.
  */
-export function sumByCategory(
+export const sumByCategory = (
   expenses: readonly Expense[],
-): Map<Category, number> {
+): Map<Category, number> => {
   const sums = new Map<Category, number>();
 
   for (const expense of expenses) {
@@ -34,16 +34,16 @@ export function sumByCategory(
   }
 
   return sums;
-}
+};
 
 /**
  * Returns the set of categories with the highest total spending.
  * Handles ties — multiple categories can be "top" if they share the max amount.
  * Returns an empty set if there are no expenses.
  */
-export function getTopSpendingCategories(
+export const getTopSpendingCategories = (
   expenses: readonly Expense[],
-): Set<Category> {
+): Set<Category> => {
   if (expenses.length === 0) return new Set();
 
   const categorySums = sumByCategory(expenses);
@@ -57,31 +57,31 @@ export function getTopSpendingCategories(
   }
 
   return topCategories;
-}
+};
 
 /**
  * Checks if an expense belongs to a top-spending category.
  */
-export function isInTopCategory(
+export const isInTopCategory = (
   expense: Expense,
   topCategories: Set<Category>,
-): boolean {
+): boolean => {
   return topCategories.has(expense.category);
-}
+};
 
 /**
  * Generates a unique identifier.
  * Uses uuid v4.
  */
-export function generateId(): string {
+export const generateId = (): string => {
   return uuidv4();
-}
+};
 
 /**
  * Creates a new Expense entity from form data.
  * Assigns a unique ID and creation timestamp.
  */
-export function createExpense(formData: ExpenseFormData): Expense {
+export const createExpense = (formData: ExpenseFormData): Expense => {
   return {
     id: generateId(),
     name: formData.name.trim(),
@@ -89,17 +89,17 @@ export function createExpense(formData: ExpenseFormData): Expense {
     amount: Number(formData.amount.toFixed(2)),
     createdAt: new Date().toISOString(),
   };
-}
+};
 
 /**
  * Creates a duplicate of an existing expense.
  * Generates a new ID and keeps the name identical.
  */
-export function duplicateExpenseItem(expense: Expense): Expense {
+export const duplicateExpenseItem = (expense: Expense): Expense => {
   return {
     ...expense,
     id: generateId(),
     name: expense.name,
     createdAt: new Date().toISOString(),
   };
-}
+};

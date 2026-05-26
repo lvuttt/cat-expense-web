@@ -26,7 +26,7 @@ interface CatFactApiResponse {
  * Returns the current array of cached cat facts stored in localStorage.
  * Returns an empty array if the cache is empty or corrupt.
  */
-export function getCachedFacts(): string[] {
+export const getCachedFacts = (): string[] => {
   try {
     const raw = localStorage.getItem(CAT_FACT_CACHE_KEY);
     if (!raw) return [];
@@ -38,14 +38,14 @@ export function getCachedFacts(): string[] {
   } catch {
     return [];
   }
-}
+};
 
 /**
  * Adds a fact to the localStorage cache. Keeps only the most recent
  * CAT_FACT_CACHE_MAX facts to avoid unbounded growth.
  * Deduplicates — already-cached facts are not re-added.
  */
-export function cacheFact(fact: string): void {
+export const cacheFact = (fact: string): void => {
   try {
     const current = getCachedFacts();
     if (current.includes(fact)) return;
@@ -54,41 +54,24 @@ export function cacheFact(fact: string): void {
   } catch {
     // localStorage unavailable — silent failure is acceptable for a cache
   }
-}
+};
 
 /**
  * Fetches a random cat fact from the Cat Facts API and caches it.
  * Implements exponential backoff for retries.
  *
  * @param signal - Optional AbortSignal for cancellation
- * @param retries - Number of retries remaining
- * @param delay - Current delay before retrying
  * @returns The cat fact string
  * @throws Error if the request fails or response is invalid
  */
-export async function fetchCatFact(
-  signal?: AbortSignal,
-  retries = 3,
-  delay = 500,
-): Promise<string> {
-  try {
-    const response = await fetch(CAT_FACT_API_URL, { signal });
+export const fetchCatFact = async (signal?: AbortSignal): Promise<string> => {
+  const response = await fetch(CAT_FACT_API_URL, { signal });
 
-    if (!response.ok) {
-      throw new Error(`Cat fact API returned HTTP ${response.status}`);
-    }
-
-    const data: CatFactApiResponse = await response.json();
-    cacheFact(data.fact);
-    return data.fact;
-  } catch (error) {
-    if (signal?.aborted) {
-      throw error;
-    }
-    if (retries > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      return fetchCatFact(signal, retries - 1, delay * 2);
-    }
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Cat fact API returned HTTP ${response.status}`);
   }
-}
+
+  const data: CatFactApiResponse = await response.json();
+  cacheFact(data.fact);
+  return data.fact;
+};

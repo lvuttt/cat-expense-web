@@ -16,18 +16,18 @@ import { formatCurrency, formatDate } from './formatUtils';
  * Wraps a field in double quotes and escapes any existing double quotes.
  * Applied conditionally — only when the field value requires quoting.
  */
-export function csvQuote(value: string): string {
+export const csvQuote = (value: string): string => {
   const needsQuoting =
     value.includes('"') || value.includes(',') || value.includes('\n');
   if (!needsQuoting) return value;
   return `"${value.replace(/"/g, '""')}"`;
-}
+};
 
 /**
  * Converts an array of Expense objects to a complete CSV string.
  * Includes a header row and one data row per expense.
  */
-export function expensesToCsv(expenses: Expense[]): string {
+export const expensesToCsv = (expenses: Expense[]): string => {
   const headers = ['Name', 'Category', 'Amount', 'Date'];
   const rows = expenses.map((e) => [
     csvQuote(e.name),
@@ -37,13 +37,13 @@ export function expensesToCsv(expenses: Expense[]): string {
   ]);
 
   return [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');
-}
+};
 
 /**
  * Triggers a browser file download for the CSV content.
  * Creates and auto-clicks a temporary anchor element.
  */
-export function downloadCsv(content: string, filename: string): void {
+export const downloadCsv = (content: string, filename: string): void => {
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -53,14 +53,14 @@ export function downloadCsv(content: string, filename: string): void {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
-}
+};
 
 /**
  * Main entry point: converts expenses to CSV and initiates download.
  * Generates a timestamped filename.
  */
-export function exportExpensesToCsv(expenses: Expense[]): void {
+export const exportExpensesToCsv = (expenses: Expense[]): void => {
   const csv = expensesToCsv(expenses);
   const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   downloadCsv(csv, `cat-expenses-${date}.csv`);
-}
+};

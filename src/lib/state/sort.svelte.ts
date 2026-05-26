@@ -7,7 +7,7 @@ export const createSort = (defaultField: SortField = 'name') => {
     direction: 'asc',
   });
 
-  function handleSort(field: SortField): void {
+  const handleSort = (field: SortField): void => {
     if (sortConfig.field === field) {
       sortConfig = {
         field,
@@ -16,7 +16,7 @@ export const createSort = (defaultField: SortField = 'name') => {
     } else {
       sortConfig = { field, direction: 'asc' };
     }
-  }
+  };
 
   return {
     get sortConfig() {

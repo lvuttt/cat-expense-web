@@ -6,14 +6,14 @@ import type { SortConfig } from '$lib/types/models';
 
 const defaultSort: SortConfig = { field: 'name', direction: 'asc' };
 
-function renderTable(
+const renderTable = (
   overrides: Partial<{
     expenses: (typeof sampleExpense)[];
     sortConfig: SortConfig;
     isAllSelected: boolean;
     isSomeSelected: boolean;
   }> = {},
-) {
+) => {
   const onSort = vi.fn();
   const onToggleAll = vi.fn();
   const onToggleSelect = vi.fn();
@@ -38,7 +38,7 @@ function renderTable(
   });
 
   return { onSort, onToggleAll, onToggleSelect, onEdit, onDuplicate };
-}
+};
 
 describe('ExpenseTable', () => {
   it('renders empty state when there are no expenses', () => {

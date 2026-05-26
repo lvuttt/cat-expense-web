@@ -15,6 +15,7 @@ vi.mock('$lib/state/catFact.svelte', () => ({
       return null;
     },
     refetch: vi.fn(),
+    abort: vi.fn(),
   }),
 }));
 

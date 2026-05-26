@@ -26,16 +26,16 @@
   let nameRef = $state<HTMLSpanElement | null>(null);
   let showTooltip = $state(false);
 
-  function handleMouseEnter() {
+  const handleMouseEnter = () => {
     if (nameRef) {
       const isOverflowing = nameRef.scrollWidth > nameRef.clientWidth;
       showTooltip = isOverflowing;
     }
-  }
+  };
 
-  function handleMouseLeave() {
+  const handleMouseLeave = () => {
     showTooltip = false;
-  }
+  };
 
   let rowClasses = $derived(
     [
@@ -51,9 +51,9 @@
     `expense-row__category-badge expense-row__category-badge--${categoryMeta.cssClass}`,
   );
 
-  function handleRowClick() {
+  const handleRowClick = () => {
     onEdit(expense);
-  }
+  };
 </script>
 
 <div
@@ -182,7 +182,8 @@
     align-items: center;
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-md);
-    height: 100%;
+    min-height: 48px;
+    height: auto;
     box-sizing: border-box;
     cursor: pointer;
     transition:

@@ -19,7 +19,7 @@
 
   let { mode, onSubmit, nameInputRef = $bindable() }: Props = $props();
 
-  function getInitialValues(mode: DialogMode) {
+  const getInitialValues = (mode: DialogMode) => {
     if (mode.type === 'edit') {
       return {
         name: mode.expense.name,
@@ -28,7 +28,7 @@
       };
     }
     return { name: '', category: '' as Category | '', amount: '' };
-  }
+  };
 
   let name = $state('');
   let category = $state<Category | ''>('');
@@ -58,7 +58,7 @@
     errors = validateExpenseForm(formData);
   });
 
-  function handleFormSubmit(e: Event) {
+  const handleFormSubmit = (e: Event) => {
     e.preventDefault();
     hasSubmitted = true;
 
@@ -80,7 +80,7 @@
       category: category as Category,
       amount: Number(amount),
     });
-  }
+  };
 
   const isEditMode = $derived(mode.type === 'edit');
   const submitLabel = $derived(isEditMode ? 'Update' : 'Submit');

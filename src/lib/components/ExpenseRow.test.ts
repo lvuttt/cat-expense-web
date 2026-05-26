@@ -4,7 +4,7 @@ import type { Expense } from '$lib/types/models';
 import { sampleExpense } from '$lib/test/fixtures';
 import ExpenseRow from './ExpenseRow.svelte';
 
-function renderRow(
+const renderRow = (
   overrides: Partial<{
     expense: Expense;
     isHighlighted: boolean;
@@ -13,7 +13,7 @@ function renderRow(
     onEdit: (expense: Expense) => void;
     onDuplicate: (id: string) => void;
   }> = {},
-) {
+) => {
   const onToggleSelect = vi.fn();
   const onEdit = vi.fn();
   const onDuplicate = vi.fn();
@@ -31,7 +31,7 @@ function renderRow(
   });
 
   return { onToggleSelect, onEdit, onDuplicate };
-}
+};
 
 describe('ExpenseRow', () => {
   it('renders expense name, category label, and formatted amount', () => {

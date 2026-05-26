@@ -68,14 +68,14 @@ class LocalStorageService {
     }
   }
 }
-function calculateTotal(expenses) {
+const calculateTotal = (expenses) => {
   const totalCents = expenses.reduce(
     (sum, expense) => sum + Math.round(expense.amount * 100),
     0
   );
   return totalCents / 100;
-}
-function sumByCategory(expenses) {
+};
+const sumByCategory = (expenses) => {
   const sums = /* @__PURE__ */ new Map();
   for (const expense of expenses) {
     const currentCents = Math.round((sums.get(expense.category) ?? 0) * 100);
@@ -83,8 +83,8 @@ function sumByCategory(expenses) {
     sums.set(expense.category, (currentCents + addCents) / 100);
   }
   return sums;
-}
-function getTopSpendingCategories(expenses) {
+};
+const getTopSpendingCategories = (expenses) => {
   if (expenses.length === 0) return /* @__PURE__ */ new Set();
   const categorySums = sumByCategory(expenses);
   const maxAmount = Math.max(...categorySums.values());
@@ -95,14 +95,14 @@ function getTopSpendingCategories(expenses) {
     }
   }
   return topCategories;
-}
-function isInTopCategory(expense, topCategories) {
+};
+const isInTopCategory = (expense, topCategories) => {
   return topCategories.has(expense.category);
-}
-function generateId() {
+};
+const generateId = () => {
   return v4();
-}
-function createExpense(formData) {
+};
+const createExpense = (formData) => {
   return {
     id: generateId(),
     name: formData.name.trim(),
@@ -110,26 +110,26 @@ function createExpense(formData) {
     amount: Number(formData.amount.toFixed(2)),
     createdAt: (/* @__PURE__ */ new Date()).toISOString()
   };
-}
-function duplicateExpenseItem(expense) {
+};
+const duplicateExpenseItem = (expense) => {
   return {
     ...expense,
     id: generateId(),
     name: expense.name,
     createdAt: (/* @__PURE__ */ new Date()).toISOString()
   };
-}
+};
 const createExpenses = (storage) => {
   let expenses = [];
   expenses = storage.load() ?? [];
   const categoryTotals = derived(() => sumByCategory(expenses));
   const totalAmount = derived(() => calculateTotal(expenses));
   const topCategories = derived(() => getTopSpendingCategories(expenses));
-  function addExpense(formData) {
+  const addExpense = (formData) => {
     const newExpense = createExpense(formData);
     expenses = [...expenses, newExpense];
-  }
-  function updateExpense(id, formData) {
+  };
+  const updateExpense = (id, formData) => {
     const newAmount = Number(formData.amount.toFixed(2));
     expenses = expenses.map((expense) => expense.id === id ? {
       ...expense,
@@ -137,16 +137,16 @@ const createExpenses = (storage) => {
       category: formData.category,
       amount: newAmount
     } : expense);
-  }
-  function deleteExpenses(ids) {
+  };
+  const deleteExpenses = (ids) => {
     expenses = expenses.filter((expense) => !ids.has(expense.id));
-  }
-  function duplicateExpense(id) {
+  };
+  const duplicateExpense = (id) => {
     const target = expenses.find((expense) => expense.id === id);
     if (!target) return;
     const newExp = duplicateExpenseItem(target);
     expenses = [...expenses, newExp];
-  }
+  };
   return {
     get expenses() {
       return expenses;
@@ -184,17 +184,17 @@ const createSelection = (getItemIds) => {
     const ids = getItemIds();
     return ids.some((id) => selectedIds.has(id));
   });
-  function isSelected(id) {
+  const isSelected = (id) => {
     return selectedIds.has(id);
-  }
-  function toggle(id) {
+  };
+  const toggle = (id) => {
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
     } else {
       selectedIds.add(id);
     }
-  }
-  function toggleAll() {
+  };
+  const toggleAll = () => {
     const ids = getItemIds();
     if (isAllSelected()) {
       selectedIds.clear();
@@ -203,10 +203,10 @@ const createSelection = (getItemIds) => {
         selectedIds.add(id);
       }
     }
-  }
-  function clearSelection() {
+  };
+  const clearSelection = () => {
     selectedIds.clear();
-  }
+  };
   return {
     get selectedIds() {
       return selectedIds;
@@ -231,23 +231,23 @@ const SORT_STRATEGIES = {
   category: (a, b) => a.category.localeCompare(b.category),
   amount: (a, b) => a.amount - b.amount
 };
-function sortExpenses(expenses, config) {
+const sortExpenses = (expenses, config) => {
   const compareFn = SORT_STRATEGIES[config.field];
   const sorted = [...expenses].sort(compareFn);
   return config.direction === "desc" ? sorted.reverse() : sorted;
-}
-function toggleSortDirection(current) {
+};
+const toggleSortDirection = (current) => {
   return current === "asc" ? "desc" : "asc";
-}
+};
 const createSort = (defaultField = "name") => {
   let sortConfig = { field: defaultField, direction: "asc" };
-  function handleSort(field) {
+  const handleSort = (field) => {
     if (sortConfig.field === field) {
       sortConfig = { field, direction: toggleSortDirection(sortConfig.direction) };
     } else {
       sortConfig = { field, direction: "asc" };
     }
-  }
+  };
   return {
     get sortConfig() {
       return sortConfig;
@@ -255,12 +255,12 @@ const createSort = (defaultField = "name") => {
     handleSort
   };
 };
-function formatCurrency(amount) {
+const formatCurrency = (amount) => {
   return `$${amount.toLocaleString(void 0, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })}`;
-}
+};
 function Header($$renderer) {
   $$renderer.push(`<header class="header svelte-1elxaub" id="app-header"><div class="header__logo svelte-1elxaub" aria-hidden="true">🐱</div> <h1 class="header__title svelte-1elxaub">Cat Expense</h1> <p class="header__subtitle svelte-1elxaub">Track your feline friend's expenses with purr-fection</p></header>`);
 }
@@ -325,20 +325,68 @@ function SpendingChart($$renderer, $$props) {
     $$renderer2.push(`<!--]-->`);
   });
 }
-const createVirtualList = (getItems, rowHeight, buffer = 5) => {
+const createVirtualList = (getItems, getItemId, defaultHeight, buffer = 5) => {
   let container = null;
   let scrollTop = 0;
   let clientHeight = 400;
+  const measuredHeights = {};
+  const offsets = derived(() => {
+    const items = getItems();
+    const listOffsets = [];
+    let currentOffset = 0;
+    for (let i = 0; i < items.length; i++) {
+      listOffsets.push(currentOffset);
+      const id = getItemId(items[i]);
+      const height = measuredHeights[id] ?? defaultHeight;
+      currentOffset += height;
+    }
+    return listOffsets;
+  });
+  const totalHeight = derived(() => {
+    const items = getItems();
+    if (items.length === 0) return 0;
+    const lastIndex = items.length - 1;
+    const lastId = getItemId(items[lastIndex]);
+    const lastHeight = measuredHeights[lastId] ?? defaultHeight;
+    return offsets()[lastIndex] + lastHeight;
+  });
   const visibleItems = derived(() => {
     const items = getItems();
     if (items.length === 0) {
       return [];
     }
-    const startIndex = Math.max(0, Math.floor(scrollTop / rowHeight) - buffer);
-    const endIndex = Math.min(items.length, Math.ceil((scrollTop + clientHeight) / rowHeight) + buffer);
-    return items.slice(startIndex, endIndex).map((item, index) => ({ item, originalIndex: startIndex + index }));
+    let startIndex = 0;
+    for (let i = 0; i < items.length; i++) {
+      const id = getItemId(items[i]);
+      const height = measuredHeights[id] ?? defaultHeight;
+      if (offsets()[i] + height >= scrollTop) {
+        startIndex = i;
+        break;
+      }
+    }
+    startIndex = Math.max(0, startIndex - buffer);
+    let endIndex = items.length;
+    for (let i = startIndex; i < items.length; i++) {
+      if (offsets()[i] > scrollTop + clientHeight) {
+        endIndex = i;
+        break;
+      }
+    }
+    endIndex = Math.min(items.length, endIndex + buffer);
+    const result = [];
+    for (let i = startIndex; i < endIndex; i++) {
+      result.push({ item: items[i], originalIndex: i, offset: offsets()[i] });
+    }
+    return result;
   });
-  const totalHeight = derived(() => getItems().length * rowHeight);
+  const measureRow = (id, height) => {
+    if (measuredHeights[id] !== height) {
+      measuredHeights[id] = height;
+    }
+  };
+  const getItemHeight = (id) => {
+    return measuredHeights[id] ?? defaultHeight;
+  };
   return {
     get container() {
       return container;
@@ -351,7 +399,9 @@ const createVirtualList = (getItems, rowHeight, buffer = 5) => {
     },
     get totalHeight() {
       return totalHeight();
-    }
+    },
+    measureRow,
+    getItemHeight
   };
 };
 function ExpenseRow($$renderer, $$props) {
@@ -391,7 +441,7 @@ function ExpenseTable($$renderer, $$props) {
       }
     ];
     let hasExpenses = derived(() => expenses.length > 0);
-    let virtualList = createVirtualList(() => expenses, ROW_HEIGHT);
+    let virtualList = createVirtualList(() => expenses, (expense) => expense.id, ROW_HEIGHT);
     $$renderer2.push(`<div class="expense-table svelte-1q6qyt8" id="expense-table" role="table" aria-label="Expense list"><div class="expense-table__header svelte-1q6qyt8" role="row"><div class="expense-table__header-cell expense-table__header-cell--checkbox svelte-1q6qyt8" role="columnheader"><input class="expense-table__checkbox svelte-1q6qyt8" type="checkbox"${attr("checked", isAllSelected, true)}${attr("aria-label", isAllSelected ? "Deselect all expenses" : "Select all expenses")} id="select-all-checkbox"${attr("disabled", !hasExpenses(), true)}/></div> <!--[-->`);
     const each_array = ensure_array_like(SORTABLE_COLUMNS);
     for (let $$index = 0, $$length = each_array.length; $$index < $$length; $$index++) {
@@ -412,8 +462,8 @@ function ExpenseTable($$renderer, $$props) {
       $$renderer2.push(`<!--[-->`);
       const each_array_1 = ensure_array_like(virtualList.visibleItems);
       for (let $$index_1 = 0, $$length = each_array_1.length; $$index_1 < $$length; $$index_1++) {
-        let { item: expense, originalIndex } = each_array_1[$$index_1];
-        $$renderer2.push(`<div class="expense-table__row-wrapper svelte-1q6qyt8"${attr_style(`top: ${stringify(originalIndex * ROW_HEIGHT)}px;`)}>`);
+        let { item: expense, originalIndex, offset } = each_array_1[$$index_1];
+        $$renderer2.push(`<div class="expense-table__row-wrapper svelte-1q6qyt8"${attr_style(`position: absolute; top: ${stringify(offset)}px; left: 0; right: 0; height: auto;`)}>`);
         ExpenseRow($$renderer2, {
           expense,
           isHighlighted: isInTopCategory(expense, topCategories),
@@ -429,7 +479,7 @@ function ExpenseTable($$renderer, $$props) {
     $$renderer2.push(`<!--]--></div></div></div>`);
   });
 }
-function getCachedFacts() {
+const getCachedFacts = () => {
   try {
     const raw = localStorage.getItem(CAT_FACT_CACHE_KEY);
     if (!raw) return [];
@@ -441,8 +491,8 @@ function getCachedFacts() {
   } catch {
     return [];
   }
-}
-function cacheFact(fact) {
+};
+const cacheFact = (fact) => {
   try {
     const current = getCachedFacts();
     if (current.includes(fact)) return;
@@ -450,27 +500,16 @@ function cacheFact(fact) {
     localStorage.setItem(CAT_FACT_CACHE_KEY, JSON.stringify(updated));
   } catch {
   }
-}
-async function fetchCatFact(signal, retries = 3, delay = 500) {
-  try {
-    const response = await fetch(CAT_FACT_API_URL, { signal });
-    if (!response.ok) {
-      throw new Error(`Cat fact API returned HTTP ${response.status}`);
-    }
-    const data = await response.json();
-    cacheFact(data.fact);
-    return data.fact;
-  } catch (error) {
-    if (signal?.aborted) {
-      throw error;
-    }
-    if (retries > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      return fetchCatFact(signal, retries - 1, delay * 2);
-    }
-    throw error;
+};
+const fetchCatFact = async (signal) => {
+  const response = await fetch(CAT_FACT_API_URL, { signal });
+  if (!response.ok) {
+    throw new Error(`Cat fact API returned HTTP ${response.status}`);
   }
-}
+  const data = await response.json();
+  cacheFact(data.fact);
+  return data.fact;
+};
 const getOfflineFact = () => {
   const cached = getCachedFacts();
   if (cached.length === 0) return FALLBACK_CAT_FACT;
@@ -482,28 +521,34 @@ const createCatFact = () => {
   let isLoading = false;
   let error = null;
   let abortController = null;
-  function refetch() {
+  const refetch = async () => {
     abortController?.abort();
     const controller = new AbortController();
     abortController = controller;
     isLoading = true;
     error = null;
-    fetchCatFact(controller.signal).then((newFact) => {
+    try {
+      const newFact = await fetchCatFact(controller.signal);
       if (!controller.signal.aborted) {
         fact = newFact;
         isLoading = false;
       }
-    }).catch((err) => {
+    } catch (err) {
       if (controller.signal.aborted) return;
       const message = err instanceof Error ? err.message : "Failed to fetch cat fact";
       console.warn("[createCatFact] API error, using offline fallback:", message);
       fact = getOfflineFact();
       error = message;
       isLoading = false;
-    });
-  }
-  onDestroy(() => {
+    }
+  };
+  const abort = () => {
     abortController?.abort();
+    abortController = null;
+    isLoading = false;
+  };
+  onDestroy(() => {
+    abort();
   });
   return {
     get fact() {
@@ -515,7 +560,8 @@ const createCatFact = () => {
     get error() {
       return error;
     },
-    refetch
+    refetch,
+    abort
   };
 };
 function ExpenseDialog($$renderer, $$props) {

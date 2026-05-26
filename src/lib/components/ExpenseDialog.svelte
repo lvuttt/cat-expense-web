@@ -79,15 +79,18 @@
       requestAnimationFrame(() => {
         nameInputEl?.focus();
       });
+      return () => {
+        catFactState.abort();
+      };
     }
   });
 
   // Close on Escape key
-  function handleKeyDown(e: KeyboardEvent) {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (isOpen && e.key === 'Escape') {
       onClose();
     }
-  }
+  };
 
   const isEditMode = $derived(mode.type === 'edit');
   const title = $derived(isEditMode ? 'Edit Expense' : 'Add Expense');

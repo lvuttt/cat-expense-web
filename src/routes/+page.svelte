@@ -28,30 +28,30 @@
   let isDialogOpen = $state(false);
   let dialogMode = $state<DialogMode>({ type: 'add' });
 
-  function handleAddClick() {
+  const handleAddClick = () => {
     dialogMode = { type: 'add' };
     isDialogOpen = true;
-  }
+  };
 
-  function handleEditClick(expense: Expense) {
+  const handleEditClick = (expense: Expense) => {
     dialogMode = { type: 'edit', expense };
     isDialogOpen = true;
-  }
+  };
 
-  function handleDialogClose() {
+  const handleDialogClose = () => {
     isDialogOpen = false;
-  }
+  };
 
-  function handleDialogSubmit(formData: ExpenseFormData) {
+  const handleDialogSubmit = (formData: ExpenseFormData) => {
     if (dialogMode.type === 'edit') {
       expensesState.updateExpense(dialogMode.expense.id, formData);
     } else {
       expensesState.addExpense(formData);
     }
     isDialogOpen = false;
-  }
+  };
 
-  function handleDeleteClick() {
+  const handleDeleteClick = () => {
     if (selectionState.selectedCount === 0) return;
 
     const count = selectionState.selectedCount;
@@ -68,11 +68,11 @@
 
     expensesState.deleteExpenses(idsToDelete);
     selectionState.clearSelection();
-  }
+  };
 
-  function handleExportClick() {
+  const handleExportClick = () => {
     exportExpensesToCsv(sortedExpenses);
-  }
+  };
 </script>
 
 <div class="app">

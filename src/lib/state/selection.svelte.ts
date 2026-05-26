@@ -18,19 +18,19 @@ export const createSelection = (getItemIds: () => string[]) => {
     return ids.some((id) => selectedIds.has(id));
   });
 
-  function isSelected(id: string): boolean {
+  const isSelected = (id: string): boolean => {
     return selectedIds.has(id);
-  }
+  };
 
-  function toggle(id: string): void {
+  const toggle = (id: string): void => {
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
     } else {
       selectedIds.add(id);
     }
-  }
+  };
 
-  function toggleAll(): void {
+  const toggleAll = (): void => {
     const ids = getItemIds();
     if (isAllSelected) {
       // Clear only those in ids to prevent clearing other values if any,
@@ -42,11 +42,11 @@ export const createSelection = (getItemIds: () => string[]) => {
         selectedIds.add(id);
       }
     }
-  }
+  };
 
-  function clearSelection(): void {
+  const clearSelection = (): void => {
     selectedIds.clear();
-  }
+  };
 
   return {
     get selectedIds() {

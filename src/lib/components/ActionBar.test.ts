@@ -2,13 +2,13 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import ActionBar from './ActionBar.svelte';
 
-function renderBar(
+const renderBar = (
   overrides: Partial<{
     selectedCount: number;
     isDeleteDisabled: boolean;
     isExportDisabled: boolean;
   }> = {},
-) {
+) => {
   const onAddClick = vi.fn();
   const onDeleteClick = vi.fn();
   const onExportClick = vi.fn();
@@ -26,7 +26,7 @@ function renderBar(
   });
 
   return { onAddClick, onDeleteClick, onExportClick };
-}
+};
 
 describe('ActionBar', () => {
   it('renders action buttons in the toolbar', () => {

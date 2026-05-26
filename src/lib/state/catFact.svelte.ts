@@ -15,7 +15,7 @@ export const createCatFact = () => {
   let error = $state<string | null>(null);
   let abortController: AbortController | null = null;
 
-  function refetch(): void {
+  const refetch = async (): Promise<void> => {
     abortController?.abort();
 
     const controller = new AbortController();
@@ -24,30 +24,35 @@ export const createCatFact = () => {
     isLoading = true;
     error = null;
 
-    fetchCatFact(controller.signal)
-      .then((newFact) => {
-        if (!controller.signal.aborted) {
-          fact = newFact;
-          isLoading = false;
-        }
-      })
-      .catch((err: unknown) => {
-        if (controller.signal.aborted) return;
-
-        const message =
-          err instanceof Error ? err.message : 'Failed to fetch cat fact';
-        console.warn(
-          '[createCatFact] API error, using offline fallback:',
-          message,
-        );
-        fact = getOfflineFact();
-        error = message;
+    try {
+      const newFact = await fetchCatFact(controller.signal);
+      if (!controller.signal.aborted) {
+        fact = newFact;
         isLoading = false;
-      });
-  }
+      }
+    } catch (err: unknown) {
+      if (controller.signal.aborted) return;
+
+      const message =
+        err instanceof Error ? err.message : 'Failed to fetch cat fact';
+      console.warn(
+        '[createCatFact] API error, using offline fallback:',
+        message,
+      );
+      fact = getOfflineFact();
+      error = message;
+      isLoading = false;
+    }
+  };
+
+  const abort = (): void => {
+    abortController?.abort();
+    abortController = null;
+    isLoading = false;
+  };
 
   onDestroy(() => {
-    abortController?.abort();
+    abort();
   });
 
   return {
@@ -61,5 +66,6 @@ export const createCatFact = () => {
       return error;
     },
     refetch,
+    abort,
   };
 };

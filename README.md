@@ -17,16 +17,16 @@ A premium, responsive **Svelte 5 + SvelteKit + TypeScript** web app to log and t
 
 ## 🛠️ Tech Stack
 
-| Layer           | Choice                                            |
-| --------------- | ------------------------------------------------- |
-| UI              | Svelte 5 (Runes: `$state`, `$derived`, `$effect`) |
-| Routing / build | SvelteKit 2, `@sveltejs/adapter-static`           |
-| Language        | TypeScript                                        |
-| Bundler         | Vite 6                                            |
-| Styling         | Vanilla CSS (BEM), co-located in `.svelte` files  |
-| Unit tests      | Vitest, `@testing-library/svelte`, jsdom          |
-| E2E / visual    | Playwright                                        |
-| Formatting      | Prettier + `prettier-plugin-svelte`               |
+| Layer           | Choice                                                         |
+| --------------- | -------------------------------------------------------------- |
+| UI              | Svelte 5 (Runes: `$state`, `$derived`, `$effect`)              |
+| Routing / build | SvelteKit 2, `@sveltejs/adapter-static`                        |
+| Language        | TypeScript                                                     |
+| Bundler         | Vite 6                                                         |
+| Styling         | SCSS (BEM nesting), co-located in `.svelte` files and App.scss |
+| Unit tests      | Vitest, `@testing-library/svelte`, jsdom                       |
+| E2E / visual    | Playwright                                                     |
+| Formatting      | Prettier + `prettier-plugin-svelte`                            |
 
 **Architecture highlights**: SOLID-oriented modules — pure utils, injectable `IStorageService`, configuration-driven categories and sort strategies, discriminated `DialogMode` for add/edit.
 
@@ -101,6 +101,12 @@ See [agents.md](agents.md) for full onboarding detail.
 - Svelte components tested with `@testing-library/svelte` in a real DOM (`jsdom`).
 - **Run**: `yarn test`
 
+### Code coverage (Vitest)
+
+- Measures statement, branch, function, and line coverage.
+- Configured minimum thresholds: 80% Statements, 70% Branches, 80% Functions, 80% Lines.
+- **Run**: `yarn test:cov`
+
 ### E2E tests (Playwright)
 
 - User flows: add/edit/duplicate/delete, sort, selection, highlighting, persistence.
@@ -144,5 +150,6 @@ Optional manual deploy (CLI): `yarn deploy` (uses `gh-pages` and the `build/` di
 | `yarn lint`        | ESLint                                        |
 | `yarn format`      | Prettier (includes `.svelte`)                 |
 | `yarn test`        | Vitest unit tests                             |
+| `yarn test:cov`    | Vitest unit tests with coverage report        |
 | `yarn test:e2e`    | Playwright E2E                                |
 | `yarn test:visual` | Playwright visual regression                  |

@@ -14,7 +14,7 @@ The **Cat Expense Tracker** is a **Svelte 5 + SvelteKit + TypeScript** frontend 
 - **Package Manager**: `Yarn` Classic 1.x (lockfile: `yarn.lock`).
 - **Framework**: SvelteKit 2 (SPA mode via `@sveltejs/adapter-static`).
 - **Build Bundler**: Vite 6.
-- **CSS Styling**: Pure vanilla CSS styled using strict **BEM (Block-Element-Modifier)** methodology. In Svelte components, these styles are co-located in `<style>` blocks.
+- **CSS/SCSS Styling**: SCSS styled using strict **BEM (Block-Element-Modifier)** methodology. In Svelte components, these styles are co-located in `<style lang="scss">` blocks. Global layout styles are in `src/App.scss`.
 
 ### Key API Endpoints
 
@@ -58,7 +58,7 @@ cat-expense-web/
 │
 └── src/
     ├── app.html                  # SvelteKit HTML entry template
-    ├── App.css                   # Main container styles
+    ├── App.scss                  # Main container styles
     ├── index.css                 # Global theme variables, resets
     │
     ├── routes/                   # SvelteKit routing (client-side SPA)
@@ -182,7 +182,10 @@ The app highlights all rows in the category (or categories) with the **highest t
   - Utilities and services (`expenseUtils`, `sortUtils`, `formatUtils`, `validationUtils`, `csvUtils`, `storageService`, `catFactService`).
   - All Svelte components (`*.svelte` + co-located `*.test.ts`).
   - Route orchestration (`page.test.ts`, `layout.test.ts`).
-- **Command**: `yarn test`
+  - Minimum thresholds enforced via `@vitest/coverage-v8`: 80% Statements, 70% Branches, 80% Functions, 80% Lines.
+- **Commands**:
+  - `yarn test` to run unit tests.
+  - `yarn test:cov` to run unit tests with coverage report.
 
 Component test example:
 
@@ -221,6 +224,7 @@ render(CatFactPanel, {
 | Format (Prettier + Svelte plugin) | `yarn format`                              |
 | Type-check                        | `tsc -b`                                   |
 | Unit tests                        | `yarn test`                                |
+| Unit tests with coverage          | `yarn test:cov`                            |
 | Production build                  | `yarn build` → static site in **`build/`** |
 | Preview production build          | `yarn preview`                             |
 
